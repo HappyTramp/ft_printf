@@ -7,6 +7,9 @@ int ft_printf(const char *format, ...)
 {
     int i;
     va_list ap;
+	/* char *convertions_flags; */
+
+	/* convertions_flags = "cspdiuxX%"; */
 
     va_start(ap, format);
     i = -1;
@@ -23,7 +26,8 @@ int ft_printf(const char *format, ...)
                     ft_putstr(va_arg(ap, char*));
                     break;
                 case 'p':
-                    print_addr(va_arg(ap, void*));
+					ft_putstr("0x");
+                    PUTXNBR(va_arg(ap, int));
                     break;
                 case 'd':
                     ft_putnbr(va_arg(ap, int));
@@ -35,9 +39,15 @@ int ft_printf(const char *format, ...)
                     ft_putunbr(va_arg(ap, unsigned int));
                     break;
                 case 'x':
-                    ft_putxnbr(va_arg(ap, int));
+					ft_putstr("0x");
+                    PUTXNBR(va_arg(ap, int));
                     break;
                 case 'X':
+					ft_putstr("0x");
+                    PUTXMAJNBR(va_arg(ap, int));
+                    break;
+                case '%':
+					ft_putchar('%');
                     break;
             }
         }
@@ -50,6 +60,6 @@ int ft_printf(const char *format, ...)
 
 int main()
 {
-    ft_printf("bonjour\n");
+    ft_printf("b%conjo %X ur%p\n", 'r', 0xec54, NULL);
     return 0;
 }

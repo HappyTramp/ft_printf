@@ -4,7 +4,7 @@ CCFLAGS = -Wall -Wextra #-Werror
 RM = rm -f
 
 NAME = ft_printf
-SRC = ft_printf.c
+SRC = ft_printf.c utils.c
 OBJ = $(SRC:.c=.o)
 INCLUDE = ft_printf.h
 
