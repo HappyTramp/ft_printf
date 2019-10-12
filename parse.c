@@ -2,6 +2,7 @@
 #include "header.h"
 
 #define STRRCHR_CONVERSIONS(c) (ft_strrchr(CONVERSIONS_STR, c))
+#define IS_STANDALONE_FLAG(c) (c == '0' || c == '-')
 
 t_list			*parse(const char *format)
 {
@@ -37,9 +38,11 @@ char		*isolate_conversion(const char *conversion_start)
 	return (ft_strndup(conversion_start, i + 1));
 }
 
+// %[position][dollar][flags][width][.precision][length]type
 t_pformat	*parse_conversion(char *conversion)
 {
 	int i;
+	char	*start;
 	t_pformat	*pformat;
 
 	if (conversion == NULL)
@@ -47,12 +50,41 @@ t_pformat	*parse_conversion(char *conversion)
 	if ((pformat = (t_pformat*)malloc(sizeof(t_pformat))) == NULL)
 		return (NULL);
 	i = ft_strlen(conversion) - 1;
+	pformat->len = i + 1;
 	pformat->conversion = strrchr_index(CONVERSIONS_STR, conversion[i]);
 	i--;
-	pformat->arg_position = 0;
-	pformat->left_adjusted = FALSE;
-	pformat->zero_padding = FALSE;
-	pformat->min_field_width = -1;
-	pformat->len = 1;
+	if ((conversion = parse_arg_position(conversion, pformat)) == NULL)
+		return (NULL);
+	start = conversion;
+	while (IS_STANDALONE_FLAG(*start))
+	{
+		if (!pformat->zero_padding)
+			pformat->zero_padding = *start == '0';
+		if (!pformat->left_adjusted)
+			pformat->left_adjusted = *start == '-';
+		start++;
+	}
+	if (ft_isdigit(*start))
+		pformat->min_field_width = ft_atoi(start);
+	else
+		pformat->min_field_width = -1;
 	return (pformat);
+}
+
+char	*parse_arg_position(char *conversion, t_pformat *pformat)
+{
+	if (strrchr_index(conversion, '$') != -1)
+	{
+		if ((pformat->arg_position = ft_atoi(conversion)) == 0)
+		{
+			free(pformat);
+			return (NULL);
+		}
+		while (ft_isdigit(*conversion))
+			conversion++;
+		conversion++;
+	}
+	else
+		pformat->arg_position = -1;
+	return (conversion);
 }

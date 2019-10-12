@@ -64,7 +64,7 @@ char	*ft_strrchr(const char *s, int c)
 {
 	int i;
 
-	i = ft_strlen(s) - 1;
+	i = ft_strlen((char*)s) - 1;
 	while (s[i] != (char)c)
 	{
 		if (i == 0)
@@ -78,7 +78,7 @@ int		strrchr_index(const char *s, char c)
 {
 	int i;
 
-	i = ft_strlen(s) - 1;
+	i = ft_strlen((char*)s) - 1;
 	while (s[i] != c)
 	{
 		if (i == 0)
@@ -97,4 +97,9 @@ int		ft_strlen(char *str)
 	while (str[counter])
 		counter++;
 	return (counter);
+}
+
+t_bool	ft_isdigit(char c)
+{
+	return (c >= '0' && c <= '9');
 }

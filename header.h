@@ -58,6 +58,7 @@ int ft_printf(const char *format, ...);
 t_list		*parse(const char *format);
 char		*isolate_conversion(const char *conversion_start);
 t_pformat	*parse_conversion(char *conversion);
+char	*parse_arg_position(char *conversion, t_pformat *pformat);
 
 /*
 ** printer.c
@@ -78,6 +79,7 @@ char	*ft_strndup(const char *s1, int n);
 char	*ft_strrchr(const char *s, int c);
 int		strrchr_index(const char *s, char c);
 int		ft_strlen(char *str);
+t_bool	ft_isdigit(char c);
 
 /*
 ** list.c

@@ -60,5 +60,10 @@ int main()
     ft_printf("hex lower: %x\n", 0xabcf012);
     ft_printf("hex upper: %X\n", 0xabcf012);
     ft_printf("percent: %%\n");
+
+	/* ft_printf("precision %.2d\n", 43); */
+	ft_printf("min width %4d\n", 43);
+	ft_printf("zero padding %04d\n", 43);
+	ft_printf("right adjusted %-4d\n", 43);
     return 0;
 }
