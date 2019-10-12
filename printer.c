@@ -1,5 +1,5 @@
 #include <unistd.h>
-#include "ft_printf.h"
+#include "header.h"
 
 void	ft_putchar(char c)
 {
@@ -27,7 +27,7 @@ void	ft_putnbr(int n)
 	ft_putchar(p_n % 10 + '0');
 }
 
-void	ft_putxnbr(unsigned int n, char *hex_symbols)
+void	ft_putxnbr(long unsigned int n, char *hex_symbols)
 {
 	if (n > 15)
 		ft_putxnbr(n / 16, hex_symbols);

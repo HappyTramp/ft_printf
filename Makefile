@@ -4,9 +4,9 @@ CCFLAGS = -Wall -Wextra #-Werror
 RM = rm -f
 
 NAME = ft_printf
-SRC = ft_printf.c utils.c printer.c parse.c
+SRC = ft_printf.c utils.c printer.c parse.c list.c
 OBJ = $(SRC:.c=.o)
-INCLUDE = ft_printf.h
+INCLUDE = header.h
 
 all: $(NAME)
 

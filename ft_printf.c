@@ -1,55 +1,45 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdarg.h>
-#include "ft_printf.h"
+#include "header.h"
 
 int ft_printf(const char *format, ...)
 {
     int i;
     va_list ap;
-	/* char *convertions_flags; */
+	t_list	*format_list;
+	t_conversion	conv;
 
-	/* convertions_flags = "cspdiuxX%"; */
-
+	if ((format_list = parse(format)) == NULL)
+		return (-1);
     va_start(ap, format);
     i = -1;
     while (format[++i])
     {
         if (format[i] == '%')
         {
-            switch (format[++i])
-            {
-                case 'c':
-                    ft_putchar(va_arg(ap, char));
-                    break;
-                case 's':
-                    ft_putstr(va_arg(ap, char*));
-                    break;
-                case 'p':
-					ft_putstr("0x");
-                    PUTXNBR(va_arg(ap, int));
-                    break;
-                case 'd':
-                    ft_putnbr(va_arg(ap, int));
-                    break;
-                case 'i':
-                    ft_putnbr(va_arg(ap, int));
-                    break;
-                case 'u':
-                    ft_putunbr(va_arg(ap, unsigned int));
-                    break;
-                case 'x':
-					ft_putstr("0x");
-                    PUTXNBR(va_arg(ap, int));
-                    break;
-                case 'X':
-					ft_putstr("0x");
-                    PUTXMAJNBR(va_arg(ap, int));
-                    break;
-                case '%':
-					ft_putchar('%');
-                    break;
-            }
+			conv = format_list->data->conversion;
+			if (conv == CONVERSION_CHAR)
+				ft_putchar(va_arg(ap, char));
+			else if (conv == CONVERSION_STR)
+				ft_putstr(va_arg(ap, char*));
+			else if (conv == CONVERSION_PTR)
+			{
+				ft_putstr("0x");
+				PUTXNBR(va_arg(ap, long unsigned int));
+			}
+			else if (conv == CONVERSION_DECIMAL || conv == CONVERSION_INT)
+				ft_putnbr(va_arg(ap, int));
+			else if (conv == CONVERSION_UINT)
+				ft_putunbr(va_arg(ap, unsigned int));
+			else if (conv == CONVERSION_HEX_LOWER)
+				PUTXNBR(va_arg(ap, unsigned int));
+			else if (conv == CONVERSION_HEX_UPPER)
+				PUTXMAJNBR(va_arg(ap, unsigned int));
+			else if (conv == CONVERSION_PERCENT)
+				ft_putchar('%');
+			i += format_list->data->len;
+			list_pop_front(&format_list);
         }
         else
             write(STDOUT_FILENO, format + i, 1);
@@ -60,6 +50,15 @@ int ft_printf(const char *format, ...)
 
 int main()
 {
-    ft_printf("b%conjo %X ur%p\n", 'r', 0xec54, NULL);
+	int test;
+
+    ft_printf("char: %c\n", 'r');
+    ft_printf("string: %s\n", "bonjour");
+    ft_printf("pointer: %p\n", &test);
+    ft_printf("int: %d or %i\n", 45, 54);
+    ft_printf("uint: %u\n", 1 << 31);
+    ft_printf("hex lower: %x\n", 0xabcf012);
+    ft_printf("hex upper: %X\n", 0xabcf012);
+    ft_printf("percent: %%\n");
     return 0;
 }
