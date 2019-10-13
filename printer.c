@@ -119,11 +119,21 @@ char	*convert_to_str(t_pformat *pformat, va_list ap)
 
 	str = NULL;
 	if (pformat->min_field_width_wildcard)
-		pformat->min_field_width = va_arg(ap, int);
+	{
+		if (pformat->min_field_width != -1)
+			va_arg(ap, int);
+		else
+		{
+			pformat->min_field_width = va_arg(ap, int);
+			if (pformat->min_field_width < 0)
+			{
+				pformat->left_adjusted = TRUE;
+				pformat->min_field_width = -pformat->min_field_width;
+			}
+		}
+	}
 	if (pformat->precision_wildcard)
 		pformat->precision = va_arg(ap, int);
-	/* printf("\n%d\n", pformat->precision); */
-	/* pformat->precision = 45; */
 	if (conversion == CONVERSION_CHAR)
 	{
 		if ((str = ft_strnew(2)) == NULL)
@@ -133,7 +143,10 @@ char	*convert_to_str(t_pformat *pformat, va_list ap)
 	else if (conversion == CONVERSION_STR)
 		str = ft_strdup(va_arg(ap, char*));
 	else if (conversion == CONVERSION_PTR)
+	{
+		// handle 0x with and without zero padding
 		str = ITOA_HEX_UPPER(va_arg(ap, int));
+	}
 	else if (conversion == CONVERSION_DECIMAL || conversion == CONVERSION_INT)
 		str = ITOA_DEC(va_arg(ap, int));
 	else if (conversion == CONVERSION_UINT)

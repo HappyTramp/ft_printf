@@ -67,6 +67,7 @@ t_pformat	*parse_conversion(char *conversion)
 		start++;
 	}
 	pformat->min_field_width_wildcard = FALSE;
+	pformat->min_field_width = -1;
 	if (*start == '*')
 	{
 		pformat->min_field_width_wildcard = TRUE;
@@ -74,23 +75,20 @@ t_pformat	*parse_conversion(char *conversion)
 	}
 	if (ft_isdigit(*start))
 	{
+		/* pformat->min_field_width_wildcard = FALSE; */
 		pformat->min_field_width = ft_atoi(start);
 		while (ft_isdigit(*start))
 			start++;
 	}
-	else
-		pformat->min_field_width = -1;
 	pformat->precision = -1;
 	pformat->precision_wildcard = FALSE;
 	if (*start == '.')
 	{
 		start++;
-		/* printf("\n%s\n", start); */
 		if (*start == '*')
 			pformat->precision_wildcard = TRUE;
 		else
 		{
-			pformat->precision_wildcard = FALSE;
 			pformat->precision = ft_atoi(start);
 			while (ft_isdigit(*start))
 				start++;
