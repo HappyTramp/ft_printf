@@ -3,10 +3,9 @@
 #include <stdarg.h>
 #include "header.h"
 
-void	ft_putchar(char c)
-{
-	write(STDOUT_FILENO, &c, 1);
-}
+#define ITOA_DEC(x) (ft_itoa_base(x, "0123456789"))
+#define ITOA_HEX_LOWER(x) (ft_itoa_base(x, "abcdef0123456789"))
+#define ITOA_HEX_UPPER(x) (ft_itoa_base(x, "ABCDEF0123456789"))
 
 void	ft_putstr(char *str)
 {
@@ -14,36 +13,7 @@ void	ft_putstr(char *str)
 		write(STDOUT_FILENO, str++, 1);
 }
 
-void	ft_putnbr(int n)
-{
-	unsigned int	p_n;
-
-	p_n = n;
-	if (n < 0)
-	{
-		ft_putchar('-');
-		p_n = -n;
-	}
-	if (p_n > 9)
-		ft_putnbr(p_n / 10);
-	ft_putchar(p_n % 10 + '0');
-}
-
-void	ft_putxnbr(long unsigned int n, char *hex_symbols)
-{
-	if (n > 15)
-		ft_putxnbr(n / 16, hex_symbols);
-	ft_putchar(hex_symbols[n % 16]);
-}
-
-void	ft_putunbr(unsigned int n)
-{
-	if (n > 9)
-		ft_putunbr(n / 10);
-	ft_putchar(n % 10 + '0');
-}
-
-int	nbrlen(int nbr)
+int	nbrlen_radix(int nbr, int radix)
 {
 	int				counter;
 	unsigned int	u_nbr;
@@ -59,20 +29,23 @@ int	nbrlen(int nbr)
 	}
 	while (u_nbr > 0)
 	{
-		u_nbr /= 10;
+		u_nbr /= radix;
 		counter++;
 	}
 	return (counter);
 }
 
-char		*ft_itoa(int n)
+char		*ft_itoa_base(int n, char *base)
 {
 	char			*str;
 	int				len;
 	int				is_negative;
+	int				radix;
 	unsigned int	u_nbr;
 
-	len = nbrlen(n);
+
+	radix = ft_strlen(base);
+	len = nbrlen_radix(n, radix);
 	if ((str = (char*)malloc(sizeof(char) * (len + 1))) == NULL)
 		return (NULL);
 	str[len] = '\0';
@@ -87,8 +60,8 @@ char		*ft_itoa(int n)
 	len--;
 	while (len >= (is_negative ? 1 : 0))
 	{
-		str[len] = u_nbr % 10 + '0';
-		u_nbr /= 10;
+		str[len] = base[u_nbr % radix];
+		u_nbr /= radix;
 		len--;
 	}
 	return (str);
@@ -153,25 +126,22 @@ char	*convert_to_str(t_pformat *pformat, va_list ap)
 	}
 	else if (conversion == CONVERSION_STR)
 		str = ft_strdup(va_arg(ap, char*));
-	/* else if (conversion == CONVERSION_PTR) */
-	/* { */
-	/* 	ft_putstr("0x"); */
-	/* 	PUTXNBR(va_arg(ap, long unsigned int)); */
-	/* } */
-	else if (conversion == CONVERSION_DECIMAL || conversion == CONVERSION_INT)
-		str = ft_itoa(va_arg(ap, int));
-	/* else if (conversion == CONVERSION_UINT) */
-	/* 	ft_putunbr(va_arg(ap, unsigned int)); */
-	/* else if (conversion == CONVERSION_HEX_LOWER) */
-	/* 	PUTXNBR(va_arg(ap, unsigned int)); */
-	/* else if (conversion == CONVERSION_HEX_UPPER) */
-	/* 	PUTXMAJNBR(va_arg(ap, unsigned int)); */
+	else if (conversion == CONVERSION_PTR)
+		str = ITOA_HEX_UPPER(va_arg(ap, int)); else if (conversion == CONVERSION_DECIMAL || conversion == CONVERSION_INT)
+		str = ITOA_DEC(va_arg(ap, int));
+	else if (conversion == CONVERSION_UINT)
+		str = ITOA_DEC(va_arg(ap, int));
+	else if (conversion == CONVERSION_HEX_LOWER)
+		str = ITOA_HEX_LOWER(va_arg(ap, int));
+	else if (conversion == CONVERSION_HEX_UPPER)
+		str = ITOA_HEX_UPPER(va_arg(ap, int));
 	else if (conversion == CONVERSION_PERCENT)
 	{
 		if ((str = ft_strnew(2)) == NULL)
 			return (NULL);
 		str[0] = '%';
 	}
+	handle_precision(pformat, str);
 	add_padding(pformat, str);
 	return (str);
 }
@@ -206,25 +176,29 @@ void	add_padding(t_pformat *pformat, char *str)
 	free(tmp);
 }
 
-void	print_conversion(t_conversion conversion, va_list ap)
+void	handle_precision(t_pformat *pformat, char *str)
 {
-	if (conversion == CONVERSION_CHAR)
-		ft_putchar((char)va_arg(ap, int));
-	else if (conversion == CONVERSION_STR)
-		ft_putstr(va_arg(ap, char*));
-	else if (conversion == CONVERSION_PTR)
+	int	len;
+	char			*tmp;
+	t_conversion	conv;
+
+	if (pformat->precision == -1)
+		return ;
+	len = ft_strlen(str);
+	conv = pformat->conversion;
+	if (conv == CONVERSION_STR)
+		str[pformat->precision] = '\0';
+	else if (conv == CONVERSION_DECIMAL || conv == CONVERSION_INT
+				|| conv == CONVERSION_UINT || conv == CONVERSION_HEX_LOWER
+				|| conv == CONVERSION_HEX_UPPER)
 	{
-		ft_putstr("0x");
-		PUTXNBR(va_arg(ap, long unsigned int));
+		if (len >= pformat->precision)
+			return ;
+		tmp = (char*)malloc(sizeof(char) * (pformat->precision + 1));
+		ft_strcpy(tmp + len, str);
+		while (len-- > 0)
+			tmp[len] = '0';
+		ft_strcpy(str, tmp);
+		free(tmp);
 	}
-	else if (conversion == CONVERSION_DECIMAL || conversion == CONVERSION_INT)
-		ft_putnbr(va_arg(ap, int));
-	else if (conversion == CONVERSION_UINT)
-		ft_putunbr(va_arg(ap, unsigned int));
-	else if (conversion == CONVERSION_HEX_LOWER)
-		PUTXNBR(va_arg(ap, unsigned int));
-	else if (conversion == CONVERSION_HEX_UPPER)
-		PUTXMAJNBR(va_arg(ap, unsigned int));
-	else if (conversion == CONVERSION_PERCENT)
-		ft_putchar('%');
 }

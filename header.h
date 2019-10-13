@@ -34,6 +34,7 @@ typedef struct
 	int				ap_index;
 	t_bool			left_adjusted;
 	t_bool			zero_padding;
+	int				precision;
 	int				min_field_width;
 	t_conversion	conversion;
 	int				len;
@@ -65,19 +66,15 @@ char	*parse_arg_position(char *conversion, t_pformat *pformat);
 ** printer.c
 */
 
-void	ft_putchar(char c);
 void	ft_putstr(char *str);
-void	ft_putnbr(int nb);
-void	ft_putxnbr(long unsigned int n, char *hex_symbols);
-void	ft_putunbr(unsigned int n);
-void	print_conversion(t_conversion conversion, va_list ap);
-int	nbrlen(int nbr);
-char		*ft_itoa(int n);
+int		nbrlen_radix(int nbr, int radix);
+char	*ft_itoa(int n);
 char	*ft_strnew(int size);
 char	*ft_strdup(char *s);
 char	*ft_strcpy(char *dest, const char *src);
 void	add_padding(t_pformat *pformat, char *str);
 char	*convert_to_str(t_pformat *pformat, va_list ap);
+void	handle_precision(t_pformat *pformat, char *str);
 
 /*
 ** utils.c

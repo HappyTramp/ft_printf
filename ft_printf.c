@@ -30,6 +30,7 @@ int ft_printf(const char *format, ...)
 			/* else */
 			/* 	ap_index++; */
 			/* printf("\n%d\n", format_list->data->left_adjusted); */
+			/* printf("\n%d\n", format_list->data->precision); */
 			if ((str = convert_to_str(format_list->data, ap)) == NULL)
 				return (-1);
 			ft_putstr(str);
@@ -48,20 +49,22 @@ int ft_printf(const char *format, ...)
 
 int main()
 {
-	/* int test; */
+	int test;
 
-    /* ft_printf("char: %c\n", 'r'); */
-    /* ft_printf("string: %s\n", "bonjour"); */
-    /* ft_printf("pointer: %p\n", &test); */
-    /* ft_printf("int: %d or %i\n", 45, 54); */
-    /* ft_printf("uint: %u\n", 1 << 31); */
-    /* ft_printf("hex lower: %x\n", 0xabcf012); */
-    /* ft_printf("hex upper: %X\n", 0xabcf012); */
-    /* ft_printf("percent: %%\n"); */
+    ft_printf("char: %c\n", 'r');
+    ft_printf("string: %s\n", "bonjour");
+    ft_printf("pointer: %p\n", &test);
+    ft_printf("int: %d or %i\n", 45, 54);
+    ft_printf("uint: %u\n", 1 << 31);
+    ft_printf("hex lower: %x\n", 0xabcf012);
+    ft_printf("hex upper: %X\n", 0xabcf012);
+    ft_printf("percent: %%\n");
 
-	/* ft_printf("precision %.2d\n", 43); */
+	ft_printf("precision |%.10d|\n", 43);
+	ft_printf("string precision |%.1s|\n", "bonjour");
 	ft_printf("min width     |%9d|\n", 43);
 	ft_printf("zero padding  |%09d|\n", 43);
 	ft_printf("left adjusted |%-9d|\n", 43);
+	ft_printf("string padding |%9s|\n", "bon");
     return 0;
 }

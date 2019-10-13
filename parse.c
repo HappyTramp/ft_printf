@@ -67,9 +67,21 @@ t_pformat	*parse_conversion(char *conversion)
 		start++;
 	}
 	if (ft_isdigit(*start))
+	{
 		pformat->min_field_width = ft_atoi(start);
+		while (ft_isdigit(*start))
+			start++;
+	}
 	else
 		pformat->min_field_width = -1;
+	pformat->precision = -1;
+	if (*start == '.')
+	{
+		start++;
+		pformat->precision = ft_atoi(start);
+		while (ft_isdigit(*start))
+			start++;
+	}
 	return (pformat);
 }
 

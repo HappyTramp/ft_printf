@@ -10,10 +10,13 @@ INCLUDE = header.h
 
 all: $(NAME)
 
-$(NAME): $(OBJ) $(INCLUDE)
+debug: CCFLAGS += -g -fsanitize=address
+debug: re
+
+$(NAME): $(OBJ)
 	$(CC) $(CCFLAGS) -o $@ $(OBJ)
 
-%.o: %.c
+%.o: %.c $(INCLUDE)
 	$(CC) $(CCFLAGS) -c -o $@ $<
 
 clean:
