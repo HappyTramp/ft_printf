@@ -56,6 +56,8 @@ t_pformat	*parse_conversion(char *conversion)
 	if ((conversion = parse_arg_position(conversion, pformat)) == NULL)
 		return (NULL);
 	start = conversion;
+	pformat->zero_padding = FALSE;
+	pformat->left_adjusted = FALSE;
 	while (IS_STANDALONE_FLAG(*start))
 	{
 		if (!pformat->zero_padding)
@@ -75,7 +77,7 @@ char	*parse_arg_position(char *conversion, t_pformat *pformat)
 {
 	if (strrchr_index(conversion, '$') != -1)
 	{
-		if ((pformat->arg_position = ft_atoi(conversion)) == 0)
+		if ((pformat->ap_index = ft_atoi(conversion)) == 0)
 		{
 			free(pformat);
 			return (NULL);
@@ -85,6 +87,6 @@ char	*parse_arg_position(char *conversion, t_pformat *pformat)
 		conversion++;
 	}
 	else
-		pformat->arg_position = -1;
+		pformat->ap_index = -1;
 	return (conversion);
 }
