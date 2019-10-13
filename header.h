@@ -35,7 +35,9 @@ typedef struct
 	t_bool			left_adjusted;
 	t_bool			zero_padding;
 	int				precision;
+	t_bool			precision_wildcard;
 	int				min_field_width;
+	t_bool			min_field_width_wildcard;
 	t_conversion	conversion;
 	int				len;
 }	t_pformat;
@@ -72,7 +74,7 @@ char	*ft_itoa(int n);
 char	*ft_strnew(int size);
 char	*ft_strdup(char *s);
 char	*ft_strcpy(char *dest, const char *src);
-void	add_padding(t_pformat *pformat, char *str);
+void	handle_padding(t_pformat *pformat, char *str);
 char	*convert_to_str(t_pformat *pformat, va_list ap);
 void	handle_precision(t_pformat *pformat, char *str);
 

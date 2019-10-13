@@ -118,6 +118,12 @@ char	*convert_to_str(t_pformat *pformat, va_list ap)
 	t_conversion conversion = pformat->conversion;
 
 	str = NULL;
+	if (pformat->min_field_width_wildcard)
+		pformat->min_field_width = va_arg(ap, int);
+	if (pformat->precision_wildcard)
+		pformat->precision = va_arg(ap, int);
+	/* printf("\n%d\n", pformat->precision); */
+	/* pformat->precision = 45; */
 	if (conversion == CONVERSION_CHAR)
 	{
 		if ((str = ft_strnew(2)) == NULL)
@@ -127,7 +133,8 @@ char	*convert_to_str(t_pformat *pformat, va_list ap)
 	else if (conversion == CONVERSION_STR)
 		str = ft_strdup(va_arg(ap, char*));
 	else if (conversion == CONVERSION_PTR)
-		str = ITOA_HEX_UPPER(va_arg(ap, int)); else if (conversion == CONVERSION_DECIMAL || conversion == CONVERSION_INT)
+		str = ITOA_HEX_UPPER(va_arg(ap, int));
+	else if (conversion == CONVERSION_DECIMAL || conversion == CONVERSION_INT)
 		str = ITOA_DEC(va_arg(ap, int));
 	else if (conversion == CONVERSION_UINT)
 		str = ITOA_DEC(va_arg(ap, int));
@@ -142,11 +149,11 @@ char	*convert_to_str(t_pformat *pformat, va_list ap)
 		str[0] = '%';
 	}
 	handle_precision(pformat, str);
-	add_padding(pformat, str);
+	handle_padding(pformat, str);
 	return (str);
 }
 
-void	add_padding(t_pformat *pformat, char *str)
+void	handle_padding(t_pformat *pformat, char *str)
 {
 	char	*tmp;
 	int		len;
@@ -195,9 +202,11 @@ void	handle_precision(t_pformat *pformat, char *str)
 		if (len >= pformat->precision)
 			return ;
 		tmp = (char*)malloc(sizeof(char) * (pformat->precision + 1));
-		ft_strcpy(tmp + len, str);
-		while (len-- > 0)
-			tmp[len] = '0';
+		ft_strcpy(tmp + pformat->precision - len, str);
+		/* printf("\n>%s< %d %d\n", str, len, pformat->precision); */
+		pformat->precision -= len;
+		while (pformat->precision-- > 0)
+			tmp[pformat->precision] = '0';
 		ft_strcpy(str, tmp);
 		free(tmp);
 	}
