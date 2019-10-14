@@ -31,16 +31,24 @@ typedef int	t_bool;
 
 typedef struct
 {
-	int				ap_index;
-	t_bool			left_adjusted;
-	t_bool			zero_padding;
-	int				precision;
-	t_bool			precision_wildcard;
-	int				min_field_width;
-	t_bool			min_field_width_wildcard;
-	t_conversion	conversion;
-	int				len;
-}	t_pformat;
+	int			hardcoded;
+	struct
+	{
+		t_bool	exist;
+		int		ap_index;
+	}			wildcard;
+}				t_maybe_wildcard;
+
+typedef struct
+{
+	int					ap_index;
+	t_bool				left_adjusted;
+	t_bool				zero_padding;
+	t_maybe_wildcard	precision;
+	t_maybe_wildcard	min_width;
+	t_conversion		conversion;
+	int					len;
+}						t_pformat;
 
 typedef struct		s_list
 {
@@ -82,12 +90,21 @@ void	handle_precision(t_pformat *pformat, char *str);
 ** utils.c
 */
 
-int			ft_atoi(const char *str);
+int		ft_atoi(const char *str);
 char	*ft_strndup(const char *s1, int n);
 char	*ft_strrchr(const char *s, int c);
 int		strrchr_index(const char *s, char c);
 int		ft_strlen(char *str);
 t_bool	ft_isdigit(char c);
+
+/*
+** extract.c
+*/
+
+char	*extract_ap_index(t_pformat *pformat, char *fmt);
+char	*extract_min_width(t_pformat *pformat, char *fmt);
+char	*extract_standalone_flags(t_pformat *pformat, char *fmt);
+char	*extract_precision(t_pformat *pformat, char *fmt);
 
 /*
 ** list.c

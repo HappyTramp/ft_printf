@@ -118,17 +118,17 @@ char	*convert_to_str(t_pformat *pformat, va_list ap)
 	t_conversion conversion = pformat->conversion;
 
 	str = NULL;
-	if (pformat->min_field_width_wildcard)
+	if (pformat->min_width.wildcard.exist)
 	{
-		if (pformat->min_field_width != -1)
+		if (pformat->min_width != -1)
 			va_arg(ap, int);
 		else
 		{
-			pformat->min_field_width = va_arg(ap, int);
-			if (pformat->min_field_width < 0)
+			pformat->min_width = va_arg(ap, int);
+			if (pformat->min_width < 0)
 			{
 				pformat->left_adjusted = TRUE;
-				pformat->min_field_width = -pformat->min_field_width;
+				pformat->min_width = -pformat->min_width;
 			}
 		}
 	}
@@ -172,15 +172,15 @@ void	handle_padding(t_pformat *pformat, char *str)
 	int		len;
 	int		i;
 
-	if (pformat->min_field_width == -1)
+	if (pformat->min_width == -1)
 		return;
-	if ((len = ft_strlen(str)) >= pformat->min_field_width)
+	if ((len = ft_strlen(str)) >= pformat->min_width)
 		return;
-	tmp = (char*)malloc(sizeof(char) * (pformat->min_field_width + 1));
+	tmp = (char*)malloc(sizeof(char) * (pformat->min_width + 1));
 	if (!pformat->left_adjusted)
 	{
 		i = 0;
-		while (i <= pformat->min_field_width - len)
+		while (i <= pformat->min_width - len)
 			tmp[i++] = pformat->zero_padding ? '0' : ' ';
 		ft_strcpy(tmp + i - 1, str);
 		ft_strcpy(str, tmp);
@@ -189,7 +189,7 @@ void	handle_padding(t_pformat *pformat, char *str)
 	{
 		ft_strcpy(tmp, str);
 		i = len;
-		while (i < pformat->min_field_width)
+		while (i < pformat->min_width)
 			tmp[i++] = ' ';
 		ft_strcpy(str, tmp);
 	}

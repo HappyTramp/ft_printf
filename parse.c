@@ -4,6 +4,10 @@
 #define STRRCHR_CONVERSIONS(c) (ft_strrchr(CONVERSIONS_STR, c))
 #define IS_STANDALONE_FLAG(c) (c == '0' || c == '-')
 
+/*
+** %(?:\d+\$)?[-]?(?:[0]|'.{1})?-?\d*(?:\.\d+)?[cdusxX]
+*/
+
 t_list			*parse(const char *format)
 {
 	t_list		*format_list;
@@ -36,6 +40,27 @@ char		*isolate_conversion(const char *conversion_start)
 	while (strrchr_index(CONVERSIONS_STR, conversion_start[i]) == -1)
 		i++;
 	return (ft_strndup(conversion_start, i + 1));
+}
+
+
+t_pformat	*parse_reduced_fmt(char *fmt)
+{
+	t_pformat	*pformat;
+
+	if (conversion == NULL)
+		return (NULL);
+	if ((pformat = (t_pformat*)malloc(sizeof(t_pformat))) == NULL)
+		return (NULL);
+	pformat->ap_index = -1;
+	pformat->left_adjusted = FALSE;
+	pformat->zero_padding = FALSE;
+	pformat->min_width->wildcard->exist = FALSE;
+	pformat->precision->wildcard->exist = FALSE;
+	fmt = extrac_ap_index(pformat, fmt);
+	fmt = extrac_standalone_flags(pformat, fmt);
+	fmt = extract_min_width(pformat, fmt);
+	fmt = extract_precision(pformat, fmt);
+	return (pformat);
 }
 
 // %[position][dollar][flags][width][.precision][length]type
