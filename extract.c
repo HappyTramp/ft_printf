@@ -50,24 +50,27 @@ char	*extract_min_width(t_pformat *pformat, char *fmt)
 
 
 	i = 0;
-	/* if (*fmt == '*') */
-	/* { */
-	/* 	pformat->min_width.wildcard.exist = TRUE; */
-	/* 	i++; */
-	/* } */
-	if (ft_isdigit(fmt[i]))
+	if (*fmt == '*')
 	{
-		tmp = ft_atoi(&fmt[i]);
-		while (ft_isdigit(fmt[i]))
-			i++;
-		/* printf("%d\n", tmp); */
-		/* if (fmt[i] == '$') */
-		/* 	pformat->min_width.wildcard.ap_index = tmp; */
-		/* else */
-		/* { */
-			pformat->min_width.hardcoded = tmp;
-			pformat->min_width.wildcard.exist = FALSE;
-		/* } */
+		pformat->min_width.wildcard.exist = TRUE;
+		i++;
+	}
+	else
+	{
+		if (ft_isdigit(fmt[i]))
+		{
+			tmp = ft_atoi(&fmt[i]);
+			while (ft_isdigit(fmt[i]))
+				i++;
+			/* printf("%d\n", tmp); */
+			if (fmt[i] == '$')
+				pformat->min_width.wildcard.ap_index = tmp;
+			else
+			{
+				pformat->min_width.value = tmp;
+				pformat->min_width.wildcard.exist = FALSE;
+			}
+		}
 	}
 	fmt_dup = ft_strdup(&fmt[i]);
 	free(fmt);
@@ -83,20 +86,20 @@ char	*extract_precision(t_pformat *pformat, char *fmt)
 	if (*fmt != '.')
 		return (fmt);
 	i = 1;
-	/* if (fmt[i] == '*') */
-	/* { */
-	/* 	pformat->precision.wildcard.exist = TRUE; */
-	/* 	i++; */
-	/* } */
-	/* else if (!ft_isdigit(fmt[i])) */
-	/* 	pformat->precision.hardcoded = 0; */
+	if (fmt[i] == '*')
+	{
+		pformat->precision.wildcard.exist = TRUE;
+		i++;
+	}
+	else if (!ft_isdigit(fmt[i]))
+		pformat->precision.value = 0;
 	tmp = ft_atoi(&fmt[i]);
 	while (ft_isdigit(fmt[i]))
 		i++;
-	/* if (pformat->precision.wildcard.exist && fmt[i] == '$') */
-	/* 	pformat->precision.wildcard.ap_index = tmp; */
-	/* else */
-		pformat->precision.hardcoded = tmp;
+	if (pformat->precision.wildcard.exist && fmt[i] == '$')
+		pformat->precision.wildcard.ap_index = tmp;
+	else
+		pformat->precision.value = tmp;
 	fmt_dup = ft_strdup(&fmt[i]);
 	free(fmt);
 	return (fmt);

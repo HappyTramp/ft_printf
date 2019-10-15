@@ -30,7 +30,7 @@ typedef int	t_bool;
 
 typedef struct
 {
-	int			hardcoded;
+	int			value;
 	struct
 	{
 		t_bool	exist;

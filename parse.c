@@ -55,7 +55,7 @@ t_pformat	*parse_reduced(char *fmt)
 	pformat->zero_padding = FALSE;
 	pformat->min_width.wildcard.exist = FALSE;
 	pformat->precision.wildcard.exist = FALSE;
-	pformat->precision.hardcoded = -1;
+	pformat->precision.value = -1;
 	pformat->len = ft_strlen(fmt);
 	pformat->conversion = strrchr_index(CONVERSIONS_STR, fmt[pformat->len - 1]);
 	fmt[pformat->len - 1] = 0;

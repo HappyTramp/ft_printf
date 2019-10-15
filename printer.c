@@ -19,22 +19,17 @@ char	*convert_to_str(t_pformat *pformat, va_list ap)
 	t_conversion conversion = pformat->conversion;
 
 	str = NULL;
-	/* if (pformat->min_width.wildcard.exist) */
-	/* { */
-	/* 	if (pformat->min_width.hardcoded != -1) */
-	/* 		va_arg(ap, int); */
-	/* 	else */
-	/* 	{ */
-	/* 		pformat->min_width.hardcoded = va_arg(ap, int); */
-	/* 		if (pformat->min_width.hardcoded < 0) */
-	/* 		{ */
-	/* 			pformat->left_adjusted = TRUE; */
-	/* 			pformat->min_width.hardcoded *= -1; */
-	/* 		} */
-	/* 	} */
-	/* } */
-	/* if (pformat->precision.wildcard.exist) */
-	/* 	pformat->precision.hardcoded = va_arg(ap, int); */
+	if (pformat->min_width.wildcard.exist)
+	{
+		pformat->min_width.value = va_arg(ap, int);
+		if (pformat->min_width.value < 0)
+		{
+			pformat->left_adjusted = TRUE;
+			pformat->min_width.value *= -1;
+		}
+	}
+	if (pformat->precision.wildcard.exist)
+		pformat->precision.value = va_arg(ap, int);
 	if (conversion == CONVERSION_CHAR)
 	{
 		if ((str = ft_strnew(2)) == NULL)
@@ -77,15 +72,15 @@ void	handle_padding(t_pformat *pformat, char *str)
 	int		len;
 	int		i;
 
-	if (pformat->min_width.hardcoded == -1)
+	if (pformat->min_width.value == -1)
 		return;
-	if ((len = ft_strlen(str)) >= pformat->min_width.hardcoded)
+	if ((len = ft_strlen(str)) >= pformat->min_width.value)
 		return;
-	tmp = (char*)malloc(sizeof(char) * (pformat->min_width.hardcoded + 1));
+	tmp = (char*)malloc(sizeof(char) * (pformat->min_width.value + 1));
 	if (!pformat->left_adjusted)
 	{
 		i = 0;
-		while (i <= pformat->min_width.hardcoded - len)
+		while (i <= pformat->min_width.value - len)
 			tmp[i++] = pformat->zero_padding ? '0' : ' ';
 		ft_strcpy(tmp + i - 1, str);
 		ft_strcpy(str, tmp);
@@ -94,7 +89,7 @@ void	handle_padding(t_pformat *pformat, char *str)
 	{
 		ft_strcpy(tmp, str);
 		i = len;
-		while (i < pformat->min_width.hardcoded)
+		while (i < pformat->min_width.value)
 			tmp[i++] = ' ';
 		ft_strcpy(str, tmp);
 	}
@@ -108,25 +103,25 @@ void	handle_precision(t_pformat *pformat, char *str)
 	char			*tmp;
 	t_conversion	conv;
 
-	/* printf("\n%d\n", pformat->precision.hardcoded); */
-	if (pformat->precision.hardcoded == -1)
+	/* printf("\n%d\n", pformat->precision.value); */
+	if (pformat->precision.value == -1)
 		return ;
 	len = ft_strlen(str);
 	conv = pformat->conversion;
 	if (conv == CONVERSION_STR)
-		str[pformat->precision.hardcoded] = '\0';
+		str[pformat->precision.value] = '\0';
 	else if (conv == CONVERSION_DECIMAL || conv == CONVERSION_INT
 				|| conv == CONVERSION_UINT || conv == CONVERSION_HEX_LOWER
 				|| conv == CONVERSION_HEX_UPPER)
 	{
-		if (len >= pformat->precision.hardcoded)
+		if (len >= pformat->precision.value)
 			return ;
-		tmp = (char*)malloc(sizeof(char) * (pformat->precision.hardcoded + 1));
-		ft_strcpy(tmp + pformat->precision.hardcoded - len, str);
+		tmp = (char*)malloc(sizeof(char) * (pformat->precision.value + 1));
+		ft_strcpy(tmp + pformat->precision.value - len, str);
 		/* printf("\n>%s< %d %d\n", str, len, pformat->precision); */
-		pformat->precision.hardcoded -= len;
-		while (pformat->precision.hardcoded-- > 0)
-			tmp[pformat->precision.hardcoded] = '0';
+		pformat->precision.value -= len;
+		while (pformat->precision.value-- > 0)
+			tmp[pformat->precision.value] = '0';
 		ft_strcpy(str, tmp);
 		free(tmp);
 	}

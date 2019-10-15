@@ -26,3 +26,7 @@ fclean: clean
 	$(RM) $(OBJ)
 
 re: fclean all
+
+test: fclean
+	make -C ../schooltest
+	../schooltest/all_tests
