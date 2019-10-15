@@ -4,112 +4,13 @@
 #include "header.h"
 
 #define ITOA_DEC(x) (ft_itoa_base(x, "0123456789"))
-#define ITOA_HEX_LOWER(x) (ft_itoa_base(x, "abcdef0123456789"))
-#define ITOA_HEX_UPPER(x) (ft_itoa_base(x, "ABCDEF0123456789"))
+#define ITOA_HEX_LOWER(x) (ft_itoa_base(x, "0123456789abcdef"))
+#define ITOA_HEX_UPPER(x) (ft_itoa_base(x, "0123456789ABCDEF"))
 
 void	ft_putstr(char *str)
 {
 	while (*str)
 		write(STDOUT_FILENO, str++, 1);
-}
-
-int	nbrlen_radix(int nbr, int radix)
-{
-	int				counter;
-	unsigned int	u_nbr;
-
-	if (nbr == 0)
-		return (1);
-	counter = 0;
-	u_nbr = nbr;
-	if (nbr < 0)
-	{
-		counter++;
-		u_nbr = -nbr;
-	}
-	while (u_nbr > 0)
-	{
-		u_nbr /= radix;
-		counter++;
-	}
-	return (counter);
-}
-
-char		*ft_itoa_base(int n, char *base)
-{
-	char			*str;
-	int				len;
-	int				is_negative;
-	int				radix;
-	unsigned int	u_nbr;
-
-
-	radix = ft_strlen(base);
-	len = nbrlen_radix(n, radix);
-	if ((str = (char*)malloc(sizeof(char) * (len + 1))) == NULL)
-		return (NULL);
-	str[len] = '\0';
-	is_negative = 0;
-	u_nbr = n;
-	if (n < 0)
-	{
-		is_negative = 1;
-		str[0] = '-';
-		u_nbr = -n;
-	}
-	len--;
-	while (len >= (is_negative ? 1 : 0))
-	{
-		str[len] = base[u_nbr % radix];
-		u_nbr /= radix;
-		len--;
-	}
-	return (str);
-}
-
-char	*ft_strnew(int size)
-{
-	char	*str;
-
-	if ((str = (char*)malloc(sizeof(char) * (size + 1))) == NULL)
-		return (NULL);
-	str[size] = '\0';
-	while (size-- > 0)
-		str[size] = '\0';
-	return (str);
-}
-
-char	*ft_strdup(char *s)
-{
-	char	*clone;
-	size_t	i;
-	size_t	len;
-
-	len = ft_strlen(s);
-	if ((clone = (char*)malloc(sizeof(char) * (len + 1))) == NULL)
-		return (NULL);
-	i = 0;
-	while (i < len)
-	{
-		clone[i] = s[i];
-		i++;
-	}
-	clone[i] = '\0';
-	return (clone);
-}
-
-char	*ft_strcpy(char *dest, const char *src)
-{
-	int i;
-
-	i = 0;
-	while (src[i])
-	{
-		dest[i] = src[i];
-		i++;
-	}
-	dest[i] = '\0';
-	return (dest);
 }
 
 char	*convert_to_str(t_pformat *pformat, va_list ap)
@@ -118,22 +19,22 @@ char	*convert_to_str(t_pformat *pformat, va_list ap)
 	t_conversion conversion = pformat->conversion;
 
 	str = NULL;
-	if (pformat->min_width.wildcard.exist)
-	{
-		if (pformat->min_width != -1)
-			va_arg(ap, int);
-		else
-		{
-			pformat->min_width = va_arg(ap, int);
-			if (pformat->min_width < 0)
-			{
-				pformat->left_adjusted = TRUE;
-				pformat->min_width = -pformat->min_width;
-			}
-		}
-	}
-	if (pformat->precision_wildcard)
-		pformat->precision = va_arg(ap, int);
+	/* if (pformat->min_width.wildcard.exist) */
+	/* { */
+	/* 	if (pformat->min_width.hardcoded != -1) */
+	/* 		va_arg(ap, int); */
+	/* 	else */
+	/* 	{ */
+	/* 		pformat->min_width.hardcoded = va_arg(ap, int); */
+	/* 		if (pformat->min_width.hardcoded < 0) */
+	/* 		{ */
+	/* 			pformat->left_adjusted = TRUE; */
+	/* 			pformat->min_width.hardcoded *= -1; */
+	/* 		} */
+	/* 	} */
+	/* } */
+	/* if (pformat->precision.wildcard.exist) */
+	/* 	pformat->precision.hardcoded = va_arg(ap, int); */
 	if (conversion == CONVERSION_CHAR)
 	{
 		if ((str = ft_strnew(2)) == NULL)
@@ -145,16 +46,20 @@ char	*convert_to_str(t_pformat *pformat, va_list ap)
 	else if (conversion == CONVERSION_PTR)
 	{
 		// handle 0x with and without zero padding
-		str = ITOA_HEX_UPPER(va_arg(ap, int));
+		ft_putstr("0x");
+		str = ft_strnew(2);
+		str[0] = 'b';
+		str[1] = 0;
+		str = ITOA_HEX_LOWER((long int)va_arg(ap, void*));
 	}
 	else if (conversion == CONVERSION_DECIMAL || conversion == CONVERSION_INT)
 		str = ITOA_DEC(va_arg(ap, int));
 	else if (conversion == CONVERSION_UINT)
-		str = ITOA_DEC(va_arg(ap, int));
+		str = ITOA_DEC(va_arg(ap, unsigned int));
 	else if (conversion == CONVERSION_HEX_LOWER)
-		str = ITOA_HEX_LOWER(va_arg(ap, int));
+		str = ITOA_HEX_LOWER(va_arg(ap, unsigned int));
 	else if (conversion == CONVERSION_HEX_UPPER)
-		str = ITOA_HEX_UPPER(va_arg(ap, int));
+		str = ITOA_HEX_UPPER(va_arg(ap, unsigned int));
 	else if (conversion == CONVERSION_PERCENT)
 	{
 		if ((str = ft_strnew(2)) == NULL)
@@ -172,15 +77,15 @@ void	handle_padding(t_pformat *pformat, char *str)
 	int		len;
 	int		i;
 
-	if (pformat->min_width == -1)
+	if (pformat->min_width.hardcoded == -1)
 		return;
-	if ((len = ft_strlen(str)) >= pformat->min_width)
+	if ((len = ft_strlen(str)) >= pformat->min_width.hardcoded)
 		return;
-	tmp = (char*)malloc(sizeof(char) * (pformat->min_width + 1));
+	tmp = (char*)malloc(sizeof(char) * (pformat->min_width.hardcoded + 1));
 	if (!pformat->left_adjusted)
 	{
 		i = 0;
-		while (i <= pformat->min_width - len)
+		while (i <= pformat->min_width.hardcoded - len)
 			tmp[i++] = pformat->zero_padding ? '0' : ' ';
 		ft_strcpy(tmp + i - 1, str);
 		ft_strcpy(str, tmp);
@@ -189,37 +94,39 @@ void	handle_padding(t_pformat *pformat, char *str)
 	{
 		ft_strcpy(tmp, str);
 		i = len;
-		while (i < pformat->min_width)
+		while (i < pformat->min_width.hardcoded)
 			tmp[i++] = ' ';
 		ft_strcpy(str, tmp);
 	}
 	free(tmp);
 }
 
+/* #include <stdio.h> */
 void	handle_precision(t_pformat *pformat, char *str)
 {
 	int	len;
 	char			*tmp;
 	t_conversion	conv;
 
-	if (pformat->precision == -1)
+	/* printf("\n%d\n", pformat->precision.hardcoded); */
+	if (pformat->precision.hardcoded == -1)
 		return ;
 	len = ft_strlen(str);
 	conv = pformat->conversion;
 	if (conv == CONVERSION_STR)
-		str[pformat->precision] = '\0';
+		str[pformat->precision.hardcoded] = '\0';
 	else if (conv == CONVERSION_DECIMAL || conv == CONVERSION_INT
 				|| conv == CONVERSION_UINT || conv == CONVERSION_HEX_LOWER
 				|| conv == CONVERSION_HEX_UPPER)
 	{
-		if (len >= pformat->precision)
+		if (len >= pformat->precision.hardcoded)
 			return ;
-		tmp = (char*)malloc(sizeof(char) * (pformat->precision + 1));
-		ft_strcpy(tmp + pformat->precision - len, str);
+		tmp = (char*)malloc(sizeof(char) * (pformat->precision.hardcoded + 1));
+		ft_strcpy(tmp + pformat->precision.hardcoded - len, str);
 		/* printf("\n>%s< %d %d\n", str, len, pformat->precision); */
-		pformat->precision -= len;
-		while (pformat->precision-- > 0)
-			tmp[pformat->precision] = '0';
+		pformat->precision.hardcoded -= len;
+		while (pformat->precision.hardcoded-- > 0)
+			tmp[pformat->precision.hardcoded] = '0';
 		ft_strcpy(str, tmp);
 		free(tmp);
 	}

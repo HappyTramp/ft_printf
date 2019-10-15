@@ -9,8 +9,7 @@
 # define HEX_SYMBOLS "0123456789abcdef"
 # define HEX_MAJ_SYMBOLS "0123456789ABCDEF"
 
-# define PUTXNBR(nb) (ft_putxnbr(nb, HEX_SYMBOLS))
-# define PUTXMAJNBR(nb) (ft_putxnbr(nb, HEX_MAJ_SYMBOLS))
+# define IS_STANDALONE_FLAG(c) (c == '0' || c == '-')
 
 # define CONVERSIONS_STR "cspdiuxX%"
 
@@ -69,19 +68,13 @@ int ft_printf(const char *format, ...);
 
 t_list		*parse(const char *format);
 char		*isolate_conversion(const char *conversion_start);
-t_pformat	*parse_conversion(char *conversion);
-char	*parse_arg_position(char *conversion, t_pformat *pformat);
+t_pformat	*parse_reduced(char *fmt);
 
 /*
 ** printer.c
 */
 
 void	ft_putstr(char *str);
-int		nbrlen_radix(int nbr, int radix);
-char	*ft_itoa(int n);
-char	*ft_strnew(int size);
-char	*ft_strdup(char *s);
-char	*ft_strcpy(char *dest, const char *src);
 void	handle_padding(t_pformat *pformat, char *str);
 char	*convert_to_str(t_pformat *pformat, va_list ap);
 void	handle_precision(t_pformat *pformat, char *str);
@@ -96,6 +89,11 @@ char	*ft_strrchr(const char *s, int c);
 int		strrchr_index(const char *s, char c);
 int		ft_strlen(char *str);
 t_bool	ft_isdigit(char c);
+int	nbrlen_radix(long int nbr, int radix);
+char		*ft_itoa_base(long int n, char *base);
+char	*ft_strnew(int size);
+char	*ft_strdup(char *s);
+char	*ft_strcpy(char *dest, const char *src);
 
 /*
 ** extract.c
