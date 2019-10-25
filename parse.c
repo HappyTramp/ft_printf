@@ -8,11 +8,11 @@
 */
 
 #include <stdio.h>
-t_list			*parse(const char *format)
+t_pformat_list				*parse(const char *format)
 {
-	t_list		*format_list;
-	t_list		*tmp;
-	t_pformat	*parsed;
+	t_pformat_list	*format_list;
+	t_pformat_list	*tmp;
+	t_pformat		*parsed;
 
 	format_list = NULL;
 	while (*format)
@@ -24,9 +24,9 @@ t_list			*parse(const char *format)
 		}
 		format++;
 		if ((parsed = parse_reduced(isolate_conversion(format))) == NULL)
-			return (list_destroy(format_list));
+			return (list_destroy(&format_list));
 		if ((tmp = list_new(parsed)) == NULL)
-			return (list_destroy(format_list));
+			return (list_destroy(&format_list));
 		list_push_back(&format_list, tmp);
 	}
 	return (format_list);

@@ -1,54 +1,60 @@
 #include <stdlib.h>
 #include "header.h"
 
-t_list	*list_new(t_pformat *data)
+t_pformat_list				*list_new(t_pformat *content)
 {
-	t_list	*list;
+	t_pformat_list	*lst;
 
-	if ((list = (t_list*)malloc(sizeof(t_list))) == NULL)
+	if ((lst = (t_pformat_list*)malloc(sizeof(t_pformat_list))) == NULL)
 		return NULL;
-	list->data = data;
-	list->next = NULL;
-	return (list);
+	lst->content = content;
+	lst->next = NULL;
+	return (lst);
 }
 
-t_list	*list_destroy(t_list *list)
+void						*list_destroy(t_pformat_list **lst)
 {
-	while (list != NULL)
-		list_pop_front(&list);
+	if (lst == NULL)
+		return (NULL);
+	while (*lst != NULL)
+		list_pop_front(lst);
 	return (NULL);
 }
 
 
-void	list_push_front(t_list **list, t_list *new_front)
+void						list_push_front(t_pformat_list **lst, t_pformat_list *new)
 {
-	new_front->next = *list;
-	*list = new_front;
+	if (lst == NULL || new == NULL)
+		return ;
+	new->next = *lst;
+	*lst = new;
 }
 
-void	list_push_back(t_list **list, t_list *new_back)
+void						list_push_back(t_pformat_list **lst, t_pformat_list *new)
 {
-	t_list	*cursor;
+	t_pformat_list	*cursor;
 
-	if (*list == NULL)
+	if (lst == NULL || new == NULL)
+		return ;
+	if (*lst == NULL)
 	{
-		*list = new_back;
+		*lst = new;
 		return ;
 	}
-	cursor = *list;
+	cursor = *lst;
 	while (cursor->next != NULL)
 		cursor = cursor->next;
-	cursor->next = new_back;
+	cursor->next = new;
 }
 
-void	list_pop_front(t_list **list)
+void						list_pop_front(t_pformat_list **lst)
 {
-	t_list	*tmp;
+	t_pformat_list	*tmp;
 
-	if (*list == NULL)
+	if (lst == NULL || *lst == NULL)
 		return ;
-	tmp = (*list)->next;
-	free((*list)->data);
-	free(*list);
-	*list = tmp;
+	tmp = (*lst)->next;
+	free((*lst)->content);
+	free(*lst);
+	*lst = tmp;
 }

@@ -7,12 +7,6 @@
 #define ITOA_HEX_LOWER(x) (ft_itoa_base(x, "0123456789abcdef"))
 #define ITOA_HEX_UPPER(x) (ft_itoa_base(x, "0123456789ABCDEF"))
 
-void	ft_putstr(char *str)
-{
-	while (*str)
-		write(STDOUT_FILENO, str++, 1);
-}
-
 char	*convert_to_str(t_pformat *pformat, va_list ap)
 {
 	char	*str;
