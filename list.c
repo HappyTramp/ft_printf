@@ -1,18 +1,18 @@
 #include <stdlib.h>
 #include "header.h"
 
-t_pformat_list				*list_new(t_pformat *content)
+t_flist	*list_new(t_pformat *content)
 {
-	t_pformat_list	*lst;
+	t_flist	*lst;
 
-	if ((lst = (t_pformat_list*)malloc(sizeof(t_pformat_list))) == NULL)
+	if ((lst = (t_flist*)malloc(sizeof(t_flist))) == NULL)
 		return NULL;
 	lst->content = content;
 	lst->next = NULL;
 	return (lst);
 }
 
-void						*list_destroy(t_pformat_list **lst)
+void	*list_destroy(t_flist **lst)
 {
 	if (lst == NULL)
 		return (NULL);
@@ -22,7 +22,7 @@ void						*list_destroy(t_pformat_list **lst)
 }
 
 
-void						list_push_front(t_pformat_list **lst, t_pformat_list *new)
+void	list_push_front(t_flist **lst, t_flist *new)
 {
 	if (lst == NULL || new == NULL)
 		return ;
@@ -30,26 +30,9 @@ void						list_push_front(t_pformat_list **lst, t_pformat_list *new)
 	*lst = new;
 }
 
-void						list_push_back(t_pformat_list **lst, t_pformat_list *new)
+void	list_pop_front(t_flist **lst)
 {
-	t_pformat_list	*cursor;
-
-	if (lst == NULL || new == NULL)
-		return ;
-	if (*lst == NULL)
-	{
-		*lst = new;
-		return ;
-	}
-	cursor = *lst;
-	while (cursor->next != NULL)
-		cursor = cursor->next;
-	cursor->next = new;
-}
-
-void						list_pop_front(t_pformat_list **lst)
-{
-	t_pformat_list	*tmp;
+	t_flist	*tmp;
 
 	if (lst == NULL || *lst == NULL)
 		return ;
@@ -57,4 +40,22 @@ void						list_pop_front(t_pformat_list **lst)
 	free((*lst)->content);
 	free(*lst);
 	*lst = tmp;
+}
+
+void	list_reverse(t_flist **lst)
+{
+	t_flist	*cursor;
+	t_flist	*prev;
+	t_flist	*tmp;
+
+	prev = NULL;
+	cursor = *lst;
+	while (cursor != NULL)
+	{
+		tmp = cursor;
+		cursor->next = prev;
+		prev = cursor;
+		cursor = tmp->next;
+	}
+	*lst = prev;
 }

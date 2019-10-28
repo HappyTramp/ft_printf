@@ -13,7 +13,7 @@ char	*convert_to_str(t_pformat *pformat, va_list ap)
 	t_conversion conversion = pformat->conversion;
 
 	str = NULL;
-	if (pformat->min_width.wildcard.exist)
+	if (pformat->min_width.wildcard)
 	{
 		pformat->min_width.value = va_arg(ap, int);
 		if (pformat->min_width.value < 0)
@@ -22,7 +22,7 @@ char	*convert_to_str(t_pformat *pformat, va_list ap)
 			pformat->min_width.value *= -1;
 		}
 	}
-	if (pformat->precision.wildcard.exist)
+	if (pformat->precision.wildcard)
 		pformat->precision.value = va_arg(ap, int);
 	if (conversion == CONVERSION_CHAR)
 	{

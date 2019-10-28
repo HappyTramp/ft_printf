@@ -1,32 +1,9 @@
 #include <stdlib.h>
 #include "header.h"
 
-char	*extract_ap_index(t_pformat *pformat, char *fmt)
-{
-	int		i;
-	int		tmp;
-	char	*fmt_dup;
-
-	if (!ft_isdigit(*fmt) || *fmt == '0')
-		return (fmt);
-	tmp = ft_atoi(fmt);
-	i = 0;
-	while (ft_isdigit(fmt[i]))
-		i++;
-	if (fmt[i] == '$')
-	{
-		pformat->ap_index = tmp;
-		fmt_dup = ft_strdup(&fmt[++i]);
-		free(fmt);
-		return (fmt_dup);
-	}
-	return (fmt);
-}
-
 char	*extract_standalone_flags(t_pformat *pformat, char *fmt)
 {
 	int		i;
-	char	*fmt_dup;
 
 	i = 0;
 	while (IS_STANDALONE_FLAG(fmt[i]))
@@ -37,22 +14,18 @@ char	*extract_standalone_flags(t_pformat *pformat, char *fmt)
 			pformat->left_adjusted = fmt[i] == '-';
 		i++;
 	}
-	fmt_dup = ft_strdup(&fmt[i]);
-	free(fmt);
- 	return (fmt_dup);
+ 	return (fmt + i);
 }
 
 char	*extract_min_width(t_pformat *pformat, char *fmt)
 {
 	int		i;
 	int		tmp;
-	char	*fmt_dup;
-
 
 	i = 0;
 	if (*fmt == '*')
 	{
-		pformat->min_width.wildcard.exist = TRUE;
+		pformat->min_width.wildcard = TRUE;
 		i++;
 	}
 	else
@@ -62,33 +35,24 @@ char	*extract_min_width(t_pformat *pformat, char *fmt)
 			tmp = ft_atoi(&fmt[i]);
 			while (ft_isdigit(fmt[i]))
 				i++;
-			/* printf("%d\n", tmp); */
-			if (fmt[i] == '$')
-				pformat->min_width.wildcard.ap_index = tmp;
-			else
-			{
-				pformat->min_width.value = tmp;
-				pformat->min_width.wildcard.exist = FALSE;
-			}
+			pformat->min_width.value = tmp;
+			pformat->min_width.wildcard = FALSE;
 		}
 	}
-	fmt_dup = ft_strdup(&fmt[i]);
-	free(fmt);
-	return (fmt_dup);
+	return (fmt + i);
 }
 
 char	*extract_precision(t_pformat *pformat, char *fmt)
 {
 	int		i;
 	int		tmp;
-	char	*fmt_dup;
 
 	if (*fmt != '.')
 		return (fmt);
 	i = 1;
 	if (fmt[i] == '*')
 	{
-		pformat->precision.wildcard.exist = TRUE;
+		pformat->precision.wildcard = TRUE;
 		i++;
 	}
 	else if (!ft_isdigit(fmt[i]))
@@ -96,11 +60,6 @@ char	*extract_precision(t_pformat *pformat, char *fmt)
 	tmp = ft_atoi(&fmt[i]);
 	while (ft_isdigit(fmt[i]))
 		i++;
-	if (pformat->precision.wildcard.exist && fmt[i] == '$')
-		pformat->precision.wildcard.ap_index = tmp;
-	else
-		pformat->precision.value = tmp;
-	fmt_dup = ft_strdup(&fmt[i]);
-	free(fmt);
-	return (fmt);
+	pformat->precision.value = tmp;
+	return (fmt + i);
 }

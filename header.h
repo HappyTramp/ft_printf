@@ -29,78 +29,71 @@ typedef int		t_bool;
 
 typedef struct
 {
-	int			value;
-	struct
-	{
-		t_bool	exist;
-		int		ap_index;
-	}			wildcard;
+	int		value;
+	t_bool	wildcard;
 }				t_maybe_wildcard;
 
 typedef struct
 {
-	int						ap_index;
-	t_bool					left_adjusted;
-	t_bool					zero_padding;
-	t_maybe_wildcard		precision;
-	t_maybe_wildcard		min_width;
-	t_conversion			conversion;
-	int						len;
-}							t_pformat;
+	t_bool				left_adjusted;
+	t_bool				zero_padding;
+	t_maybe_wildcard	precision;
+	t_maybe_wildcard	min_width;
+	t_conversion		conversion;
+	int					len;
+}				t_pformat;
 
-typedef struct				s_pformat_list
+typedef struct	s_flist
 {
-    struct s_pformat_list	*next;
-    t_pformat				*content;
-}							t_pformat_list;
+    struct s_flist	*next;
+    t_pformat		*content;
+}				t_flist;
 
 /*
 ** ft_printf.c
 */
 
-int							ft_printf(const char *format, ...);
+int			ft_printf(const char *format, ...);
 
 /*
 ** parse.c
 */
 
 
-t_pformat_list				*parse(const char *format);
-char						*isolate_conversion(const char *conversion_start);
-t_pformat					*parse_reduced(char *fmt);
+t_flist		*parse(const char *format);
+char		*isolate_conversion(const char *conversion_start);
+t_pformat	*parse_reduced(char *fmt);
 
 /*
 ** printer.c
 */
 
-void						handle_padding(t_pformat *pformat, char *str);
-char						*convert_to_str(t_pformat *pformat, va_list ap);
-void						handle_precision(t_pformat *pformat, char *str);
+void		handle_padding(t_pformat *pformat, char *str);
+char		*convert_to_str(t_pformat *pformat, va_list ap);
+void		handle_precision(t_pformat *pformat, char *str);
 
 /*
 ** utils.c
 */
 
-int		strrchr_index(const char *s, char c);
+int			strrchr_index(const char *s, char c);
 
 /*
 ** extract.c
 */
 
-// char	*extract_ap_index(t_pformat *pformat, char *fmt);
-
-char						*extract_min_width(t_pformat *pformat, char *fmt);
-char						*extract_standalone_flags(t_pformat *pformat, char *fmt);
-char						*extract_precision(t_pformat *pformat, char *fmt);
+char		*extract_standalone_flags(t_pformat *pformat, char *fmt);
+char		*extract_min_width(t_pformat *pformat, char *fmt);
+char		*extract_precision(t_pformat *pformat, char *fmt);
 
 /*
 ** list.c
 */
 
-t_pformat_list				*list_new(t_pformat *content);
-void						*list_destroy(t_pformat_list **lst);
-void						list_push_front(t_pformat_list **lst, t_pformat_list *new);
-void						list_push_back(t_pformat_list **lst, t_pformat_list *new);
-void						list_pop_front(t_pformat_list **lst);
+t_flist		*list_new(t_pformat *content);
+void		*list_destroy(t_flist **lst);
+void		list_push_front(t_flist **lst, t_flist *new);
+void		list_pop_front(t_flist **lst);
+void		list_reverse(t_flist **lst);
 
 #endif

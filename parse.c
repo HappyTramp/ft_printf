@@ -8,10 +8,10 @@
 */
 
 #include <stdio.h>
-t_pformat_list				*parse(const char *format)
+t_flist				*parse(const char *format)
 {
-	t_pformat_list	*format_list;
-	t_pformat_list	*tmp;
+	t_flist	*format_list;
+	t_flist	*tmp;
 	t_pformat		*parsed;
 
 	format_list = NULL;
@@ -27,40 +27,35 @@ t_pformat_list				*parse(const char *format)
 			return (list_destroy(&format_list));
 		if ((tmp = list_new(parsed)) == NULL)
 			return (list_destroy(&format_list));
-		list_push_back(&format_list, tmp);
+		list_push_front(&format_list, tmp);
 	}
+	list_reverse(&format_list);
 	return (format_list);
-}
-
-char		*isolate_conversion(const char *conversion_start)
-{
-	int i;
-
-	i = 0;
-	while (strrchr_index(CONVERSIONS_STR, conversion_start[i]) == -1)
-		i++;
-	return (ft_strndup(conversion_start, i + 1));
 }
 
 t_pformat	*parse_reduced(char *fmt)
 {
 	t_pformat	*pformat;
+	int			i;
 
-	if (fmt == NULL)
+	i = 0;
+	while (strrchr_index(CONVERSIONS_STR, fmt[i]) == -1)
+		i++;
+	if ((fmt = ft_strndup(fmt, i + 1)) == NULL)
 		return (NULL);
 	if ((pformat = (t_pformat*)malloc(sizeof(t_pformat))) == NULL)
 		return (NULL);
-	pformat->ap_index = -1;
 	pformat->left_adjusted = FALSE;
 	pformat->zero_padding = FALSE;
-	pformat->min_width.wildcard.exist = FALSE;
-	pformat->precision.wildcard.exist = FALSE;
 	pformat->precision.value = -1;
+	pformat->precision.wildcard = FALSE;
+	pformat->min_width.value = -1;
+	pformat->min_width.wildcard = FALSE;
 	pformat->len = ft_strlen(fmt);
 	pformat->conversion = strrchr_index(CONVERSIONS_STR, fmt[pformat->len - 1]);
-	fmt[pformat->len - 1] = 0;
-	fmt = extract_standalone_flags(pformat, fmt);
-	fmt = extract_min_width(pformat, fmt);
-	fmt = extract_precision(pformat, fmt);
+	fmt[pformat->len - 1] = '\0';
+	fmt = extract_standalone_flags(pformat, fmt + i);
+	fmt = extract_min_width(pformat, fmt + i);
+	fmt = extract_precision(pformat, fmt + i);
 	return (pformat);
 }
