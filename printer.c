@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/28 23:19:24 by cacharle          #+#    #+#             */
-/*   Updated: 2019/10/29 05:20:14 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/10/29 18:46:48 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,6 @@
 
 #define ITOA_HEX_LOWER(x) (ft_itoa_base(x, "0123456789abcdef"))
 #define ITOA_HEX_UPPER(x) (ft_itoa_base(x, "0123456789ABCDEF"))
-
-#define IN_STR(str, c) (ft_strchr(str, c) != NULL)
 
 char	*convert(t_pformat *pformat, va_list ap)
 {
@@ -40,6 +38,13 @@ char	*convert(t_pformat *pformat, va_list ap)
 		pformat->precision = va_arg(ap, int);
 	if ((str = convert_type(pformat->conversion, ap)) == NULL)
 		return (NULL);
+	if (pformat->flags & FLAG_SIGNED && (pformat->conversion == 'd' || pformat->conversion == 'i')
+		&& str[0] != '-')
+	{
+		char *tmp = ft_strjoin("+", str);
+		free(str);
+		str = tmp;
+	}
 	if ((str = handle_precision(pformat, str)) == NULL)
 		return (NULL);
 	if (pformat->conversion == 'p')
@@ -62,7 +67,10 @@ char	*convert_type(t_conversion conversion, va_list ap)
 		str[0] = (char)va_arg(ap, int);
 	}
 	else if (conversion == 's')
-		str = ft_strdup(va_arg(ap, char*));
+	{
+		char *tmp = va_arg(ap, char*);
+		str = tmp == NULL ? ft_strdup("(null)") : ft_strdup(tmp);
+	}
 	else if (conversion == 'p')
 		str = ITOA_HEX_LOWER((long int)va_arg(ap, void*));
 	else if (conversion == 'd' || conversion == 'i')
@@ -94,10 +102,23 @@ char	*handle_padding(t_pformat *pformat, char *str)
 		i = len;
 		while (i < pformat->min_width)
 			tmp[i++] = ' ';
+		tmp[i] = 0;
 		ft_strcpy(str, tmp);
 	}
 	else
 	{
+		if (IN_STR("+-", str[0]) && pformat->flags & FLAG_ZERO_PADDING)
+		{
+			tmp[0] = str[0];
+			len--;
+			i = 1;
+			while (i < pformat->min_width - len)
+				tmp[i++] = pformat->flags & FLAG_ZERO_PADDING ? '0' : ' ';
+			ft_strcpy(tmp + i , str + 1);
+			ft_strcpy(str, tmp);
+			free(tmp);
+			return (str);
+		}
 		i = 0;
 		while (i <= pformat->min_width - len)
 			tmp[i++] = pformat->flags & FLAG_ZERO_PADDING ? '0' : ' ';
@@ -114,16 +135,28 @@ char	*handle_precision(t_pformat *pformat, char *str)
 	char	*tmp;
 
 	len = ft_strlen(str);
+	if (pformat->precision == 0 && str[0] == '0')
+		return (ft_strdup(""));
 	if (pformat->conversion == 's' && pformat->precision < len)
 		str[pformat->precision] = '\0';
 	else if (IN_STR("diuxXp", pformat->conversion) && len < pformat->precision)
 	{
 		if ((tmp = (char*)malloc(sizeof(char) * (pformat->precision + 1))) == NULL)
 			return (NULL);
+		if (IN_STR("+-", str[0]))
+		{
+			tmp[0] = str[0];
+			len--;
+			ft_strcpy(tmp + pformat->precision - len + 1, str + 1);
+			while (pformat->precision-- > len)
+				tmp[pformat->precision - len + 1] = '0';
+			ft_strcpy(str, tmp);
+			free(tmp);
+			return (str);
+		}
 		ft_strcpy(tmp + pformat->precision - len, str);
-		pformat->precision -= len;
-		while (pformat->precision-- > 0)
-			tmp[pformat->precision] = '0';
+		while (pformat->precision-- > len)
+			tmp[pformat->precision - len] = '0';
 		ft_strcpy(str, tmp);
 		free(tmp);
 	}

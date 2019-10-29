@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/29 00:06:46 by cacharle          #+#    #+#             */
-/*   Updated: 2019/10/29 05:01:00 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/10/29 16:09:31 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@
 # define HEX_SYMBOLS "0123456789abcdef"
 # define HEX_MAJ_SYMBOLS "0123456789ABCDEF"
 
-# define IS_STANDALONE_FLAG(c) (c == '0' || c == '-')
+# define IN_STR(str, c) (ft_strchr(str, c) != NULL)
+# define IS_STANDALONE_FLAG(c) (IN_STR("0-+", c))
 
 # define CONVERSIONS_STR "cspdiuxX%"
 
@@ -41,6 +42,7 @@
 # define FLAG_MIN_WIDTH_WILDCARD  0b00000100
 # define FLAG_PRECISION_WILDCARD  0b00001000
 # define FLAG_MIN_WIDTH_OVERWRITE 0b00010000
+# define FLAG_SIGNED              0b00100000
 
 #include <stdio.h>
 
