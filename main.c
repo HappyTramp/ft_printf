@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/28 04:25:09 by cacharle          #+#    #+#             */
-/*   Updated: 2019/10/29 00:04:49 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/10/29 05:18:05 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,11 @@ int main()
 	ft_printf("overwrite neg            |%*-1d|\n", 0, 43);
 	   printf("overwrite neg            |%*-1d|\n", 0, 43);
 
-    /* ft_printf("pointer field width      |%15p|\n", &test); */
-    /*    printf("pointer field width      |%15p|\n", &test); */
-    /* ft_printf("pointer precision        |%.15p|\n", &test); */
-    /*    printf("pointer precision        |%.15p|\n", &test); */
+    ft_printf("pointer field width      |%15p|\n", &test);
+       printf("pointer field width      |%15p|\n", &test);
+    ft_printf("pointer precision        |%.15p|\n", &test);
+       printf("pointer precision        |%.15p|\n", &test);
+    ft_printf("pointer precision/width  |%20.15p|\n", &test);
+       printf("pointer precision/width  |%20.15p|\n", &test);
     return 0;
 }

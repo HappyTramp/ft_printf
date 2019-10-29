@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/28 23:19:24 by cacharle          #+#    #+#             */
-/*   Updated: 2019/10/29 00:13:53 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/10/29 05:20:14 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,15 @@
 #include <stdarg.h>
 #include "header.h"
 
-#define ITOA_DEC(x) (ft_itoa_base(x, "0123456789"))
 #define ITOA_HEX_LOWER(x) (ft_itoa_base(x, "0123456789abcdef"))
 #define ITOA_HEX_UPPER(x) (ft_itoa_base(x, "0123456789ABCDEF"))
 
-char	*convert_to_str(t_pformat *pformat, va_list ap)
+#define IN_STR(str, c) (ft_strchr(str, c) != NULL)
+
+char	*convert(t_pformat *pformat, va_list ap)
 {
 	char			*str;
-	t_conversion	conversion;
 
-	conversion = pformat->conversion;
-	str = NULL;
 	if (pformat->flags & FLAG_MIN_WIDTH_WILDCARD)
 	{
 		if (pformat->flags & FLAG_MIN_WIDTH_OVERWRITE)
@@ -40,63 +38,57 @@ char	*convert_to_str(t_pformat *pformat, va_list ap)
 	}
 	if (pformat->flags & FLAG_PRECISION_WILDCARD)
 		pformat->precision = va_arg(ap, int);
-	if (conversion == CONVERSION_CHAR)
+	if ((str = convert_type(pformat->conversion, ap)) == NULL)
+		return (NULL);
+	if ((str = handle_precision(pformat, str)) == NULL)
+		return (NULL);
+	if (pformat->conversion == 'p')
+		if ((str = add_address_prefix(str)) == NULL)
+			return (NULL);
+	if ((str = handle_padding(pformat, str)) == NULL)
+		return (NULL);
+	return (str);
+}
+
+char	*convert_type(t_conversion conversion, va_list ap)
+{
+	char	*str;
+
+	str = NULL;
+	if (conversion == 'c')
 	{
 		if ((str = ft_strnew(2)) == NULL)
 			return (NULL);
 		str[0] = (char)va_arg(ap, int);
 	}
-	else if (conversion == CONVERSION_STR)
+	else if (conversion == 's')
 		str = ft_strdup(va_arg(ap, char*));
-	else if (conversion == CONVERSION_PTR)
-	{
-		// handle 0x with and without zero padding
-		ft_putstr("0x");
-		str = ft_strnew(2);
-		str[0] = 'b';
-		str[1] = 0;
+	else if (conversion == 'p')
 		str = ITOA_HEX_LOWER((long int)va_arg(ap, void*));
-	}
-	else if (conversion == CONVERSION_DECIMAL || conversion == CONVERSION_INT)
-		str = ITOA_DEC(va_arg(ap, int));
-	else if (conversion == CONVERSION_UINT)
-		str = ITOA_DEC(va_arg(ap, unsigned int));
-	else if (conversion == CONVERSION_HEX_LOWER)
+	else if (conversion == 'd' || conversion == 'i')
+		str = ft_itoa(va_arg(ap, int));
+	else if (conversion == 'u')
+		str = ft_itoa(va_arg(ap, unsigned int));
+	else if (conversion == 'x')
 		str = ITOA_HEX_LOWER(va_arg(ap, unsigned int));
-	else if (conversion == CONVERSION_HEX_UPPER)
+	else if (conversion == 'X')
 		str = ITOA_HEX_UPPER(va_arg(ap, unsigned int));
-	else if (conversion == CONVERSION_PERCENT)
-	{
-		if ((str = ft_strnew(2)) == NULL)
-			return (NULL);
-		str[0] = '%';
-	}
-	handle_precision(pformat, str);
-	handle_padding(pformat, str);
+	else if (conversion == '%')
+		str = ft_strdup("%");
 	return (str);
 }
 
-void	handle_padding(t_pformat *pformat, char *str)
+char	*handle_padding(t_pformat *pformat, char *str)
 {
 	char	*tmp;
 	int		len;
 	int		i;
 
-	if (pformat->min_width == -1)
-		return;
 	if ((len = ft_strlen(str)) >= pformat->min_width)
-		return;
-	//protect this
-	tmp = (char*)malloc(sizeof(char) * (pformat->min_width + 1));
-	if (!(pformat->flags & FLAG_LEFT_ADJUSTED))
-	{
-		i = 0;
-		while (i <= pformat->min_width - len)
-			tmp[i++] = pformat->flags & FLAG_ZERO_PADDING ? '0' : ' ';
-		ft_strcpy(tmp + i - 1, str);
-		ft_strcpy(str, tmp);
-	}
-	else
+		return (str);
+	if ((tmp = (char*)malloc(sizeof(char) * (pformat->min_width + 1))) == NULL)
+		return (NULL);
+	if (pformat->flags & FLAG_LEFT_ADJUSTED)
 	{
 		ft_strcpy(tmp, str);
 		i = len;
@@ -104,29 +96,30 @@ void	handle_padding(t_pformat *pformat, char *str)
 			tmp[i++] = ' ';
 		ft_strcpy(str, tmp);
 	}
+	else
+	{
+		i = 0;
+		while (i <= pformat->min_width - len)
+			tmp[i++] = pformat->flags & FLAG_ZERO_PADDING ? '0' : ' ';
+		ft_strcpy(tmp + i - 1, str);
+		ft_strcpy(str, tmp);
+	}
 	free(tmp);
+	return (str);
 }
 
-void	handle_precision(t_pformat *pformat, char *str)
+char	*handle_precision(t_pformat *pformat, char *str)
 {
-	int	len;
-	char			*tmp;
-	t_conversion	conv;
+	int		len;
+	char	*tmp;
 
-	if (pformat->precision == -1)
-		return ;
 	len = ft_strlen(str);
-	conv = pformat->conversion;
-	if (conv == CONVERSION_STR)
+	if (pformat->conversion == 's' && pformat->precision < len)
 		str[pformat->precision] = '\0';
-	else if (conv == CONVERSION_DECIMAL || conv == CONVERSION_INT
-				|| conv == CONVERSION_UINT || conv == CONVERSION_HEX_LOWER
-				|| conv == CONVERSION_HEX_UPPER)
+	else if (IN_STR("diuxXp", pformat->conversion) && len < pformat->precision)
 	{
-		if (len >= pformat->precision)
-			return ;
-		// protect this
-		tmp = (char*)malloc(sizeof(char) * (pformat->precision + 1));
+		if ((tmp = (char*)malloc(sizeof(char) * (pformat->precision + 1))) == NULL)
+			return (NULL);
 		ft_strcpy(tmp + pformat->precision - len, str);
 		pformat->precision -= len;
 		while (pformat->precision-- > 0)
@@ -134,4 +127,17 @@ void	handle_precision(t_pformat *pformat, char *str)
 		ft_strcpy(str, tmp);
 		free(tmp);
 	}
+	return (str);
+}
+
+char	*add_address_prefix(char *addr)
+{
+	char *tmp;
+
+	if ((tmp = ft_strdup(addr)) == NULL)
+		return (NULL);
+	if ((addr = ft_strjoin("0x", addr)) == NULL)
+		return (NULL);
+	free(tmp);
+	return (addr);
 }

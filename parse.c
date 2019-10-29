@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/29 00:11:33 by cacharle          #+#    #+#             */
-/*   Updated: 2019/10/29 00:11:50 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/10/29 05:19:00 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ t_flist		*parse(char *format)
 		if ((tmp = list_new(parsed)) == NULL)
 			return (list_destroy(&format_list));
 		list_push_front(&format_list, tmp);
+		format += format_list->content->len;
 	}
 	return (list_reverse(format_list));
 }
@@ -44,14 +45,16 @@ t_pformat	*parse_reduced(char *fmt)
 {
 	t_pformat	*pformat;
 	int			i;
+	char		*start;
 
 	i = 0;
 	while (strrchr_index(CONVERSIONS_STR, fmt[i]) == -1)
 		i++;
-	if ((fmt = ft_strndup(fmt, i + 1)) == NULL)
+	if ((start = ft_strndup(fmt, i + 1)) == NULL)
 		return (NULL);
 	if ((pformat = (t_pformat*)malloc(sizeof(t_pformat))) == NULL)
 		return (NULL);
+	fmt = start;
 	pformat->precision = -1;
 	pformat->min_width = -1;
 	pformat->flags = 0;
@@ -60,6 +63,7 @@ t_pformat	*parse_reduced(char *fmt)
 	fmt[pformat->len - 1] = '\0';
 	fmt = extract_standalone_flags(pformat, fmt);
 	fmt = extract_min_width(pformat, fmt);
-	fmt = extract_precision(pformat, fmt);
+	extract_precision(pformat, fmt);
+	free(start);
 	return (pformat);
 }

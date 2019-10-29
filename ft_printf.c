@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/29 00:15:28 by cacharle          #+#    #+#             */
-/*   Updated: 2019/10/29 00:16:41 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/10/29 05:17:55 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	ft_printf(const char *format, ...)
 			write(STDOUT_FILENO, format + i, 1);
 			continue ;
 		}
-		str = convert_to_str(format_list->content, ap);
+		str = convert(format_list->content, ap);
 		if (str == NULL)
 		{
 			list_destroy(&format_list);

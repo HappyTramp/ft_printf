@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/29 00:06:46 by cacharle          #+#    #+#             */
-/*   Updated: 2019/10/29 00:10:16 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/10/29 05:01:00 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,9 +80,11 @@ t_pformat			*parse_reduced(char *fmt);
 ** printer.c
 */
 
-void				handle_padding(t_pformat *pformat, char *str);
-char				*convert_to_str(t_pformat *pformat, va_list ap);
-void				handle_precision(t_pformat *pformat, char *str);
+char	*convert(t_pformat *pformat, va_list ap);
+char	*convert_type(t_conversion conversion, va_list ap);
+char	*handle_padding(t_pformat *pformat, char *str);
+char	*handle_precision(t_pformat *pformat, char *str);
+char				*add_address_prefix(char *addr);
 
 /*
 ** utils.c
