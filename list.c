@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   list.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/10/29 00:14:50 by cacharle          #+#    #+#             */
+/*   Updated: 2019/10/29 00:14:51 by cacharle         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <stdlib.h>
 #include "header.h"
 
@@ -6,7 +18,7 @@ t_flist	*list_new(t_pformat *content)
 	t_flist	*lst;
 
 	if ((lst = (t_flist*)malloc(sizeof(t_flist))) == NULL)
-		return NULL;
+		return (NULL);
 	lst->content = content;
 	lst->next = NULL;
 	return (lst);
@@ -20,7 +32,6 @@ void	*list_destroy(t_flist **lst)
 		list_pop_front(lst);
 	return (NULL);
 }
-
 
 void	list_push_front(t_flist **lst, t_flist *new)
 {
@@ -42,20 +53,16 @@ void	list_pop_front(t_flist **lst)
 	*lst = tmp;
 }
 
-void	list_reverse(t_flist **lst)
+t_flist	*list_reverse(t_flist *lst)
 {
-	t_flist	*cursor;
-	t_flist	*prev;
 	t_flist	*tmp;
 
-	prev = NULL;
-	cursor = *lst;
-	while (cursor != NULL)
-	{
-		tmp = cursor;
-		cursor->next = prev;
-		prev = cursor;
-		cursor = tmp->next;
-	}
-	*lst = prev;
+	if (lst == NULL)
+		return (NULL);
+	if (lst->next == NULL)
+		return (lst);
+	tmp = list_reverse(lst->next);
+	lst->next->next = lst;
+	lst->next = NULL;
+	return (tmp);
 }

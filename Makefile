@@ -1,7 +1,19 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: cacharle <marvin@42.fr>                    +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2019/10/28 17:41:14 by cacharle          #+#    #+#              #
+#    Updated: 2019/10/29 02:01:51 by cacharle         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 LIBFT_ROOT = ./libft
 
 CC = gcc
-CCFLAGS = -Wall -Wextra -Werror
+CCFLAGS = -Wall -Wextra -g #-Werror
 LDFLAGS = -L. -lftprintf
 INCFLAGS = -I$(LIBFT_ROOT)
 
@@ -13,6 +25,7 @@ NAME = libftprintf.a
 SRC = ft_printf.c utils.c printer.c parse.c list.c extract.c
 OBJ = $(SRC:.c=.o)
 INCLUDE = header.h
+
 
 all: libft_all $(NAME)
 
@@ -34,7 +47,7 @@ fclean: libft_fclean clean
 re: fclean all
 
 test: all
-	$(CC) $(CCFLAGS) $(LDFLAGS) $(INCFLAGS) -o test main.c
+	$(CC) $(CCFLAGS) $(LDFLAGS) -L./libft -lft $(INCFLAGS) -o test main.c
 
 
 libft_all:

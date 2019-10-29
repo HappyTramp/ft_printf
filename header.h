@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   header.h                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/10/29 00:06:46 by cacharle          #+#    #+#             */
+/*   Updated: 2019/10/29 00:10:16 by cacharle         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef HEADER_H
 # define HEADER_H
 
@@ -24,76 +36,76 @@
 # define CONVERSION_HEX_UPPER 'X'
 # define CONVERSION_PERCENT '%'
 
-typedef char	t_conversion;
-typedef int		t_bool;
+# define FLAG_LEFT_ADJUSTED       0b00000001
+# define FLAG_ZERO_PADDING        0b00000010
+# define FLAG_MIN_WIDTH_WILDCARD  0b00000100
+# define FLAG_PRECISION_WILDCARD  0b00001000
+# define FLAG_MIN_WIDTH_OVERWRITE 0b00010000
+
+#include <stdio.h>
+
+typedef char			t_conversion;
+typedef int				t_bool;
+typedef unsigned char	t_flags;
 
 typedef struct
 {
-	int		value;
-	t_bool	wildcard;
-}				t_maybe_wildcard;
+	int				precision;
+	int				min_width;
+	t_flags			flags;
+	t_conversion	conversion;
+	int				len;
+}					t_pformat;
 
-typedef struct
+typedef struct		s_flist
 {
-	t_bool				left_adjusted;
-	t_bool				zero_padding;
-	t_maybe_wildcard	precision;
-	t_maybe_wildcard	min_width;
-	t_conversion		conversion;
-	int					len;
-}				t_pformat;
-
-typedef struct	s_flist
-{
-    struct s_flist	*next;
-    t_pformat		*content;
-}				t_flist;
+	struct s_flist	*next;
+	t_pformat		*content;
+}					t_flist;
 
 /*
 ** ft_printf.c
 */
 
-int			ft_printf(const char *format, ...);
+int					ft_printf(const char *format, ...);
 
 /*
 ** parse.c
 */
 
-
-t_flist		*parse(const char *format);
-char		*isolate_conversion(const char *conversion_start);
-t_pformat	*parse_reduced(char *fmt);
+t_flist				*parse(char *format);
+t_pformat			*parse_reduced(char *fmt);
 
 /*
 ** printer.c
 */
 
-void		handle_padding(t_pformat *pformat, char *str);
-char		*convert_to_str(t_pformat *pformat, va_list ap);
-void		handle_precision(t_pformat *pformat, char *str);
+void				handle_padding(t_pformat *pformat, char *str);
+char				*convert_to_str(t_pformat *pformat, va_list ap);
+void				handle_precision(t_pformat *pformat, char *str);
 
 /*
 ** utils.c
 */
 
-int			strrchr_index(const char *s, char c);
+int					strrchr_index(const char *s, char c);
 
 /*
 ** extract.c
 */
 
-char		*extract_standalone_flags(t_pformat *pformat, char *fmt);
-char		*extract_min_width(t_pformat *pformat, char *fmt);
-char		*extract_precision(t_pformat *pformat, char *fmt);
+char				*extract_standalone_flags(t_pformat *pformat, char *fmt);
+char				*extract_min_width(t_pformat *pformat, char *fmt);
+char				*extract_precision(t_pformat *pformat, char *fmt);
 
 /*
 ** list.c
 */
 
-t_flist		*list_new(t_pformat *content);
-void		*list_destroy(t_flist **lst);
-void		list_push_front(t_flist **lst, t_flist *new);
-void		list_pop_front(t_flist **lst);
-void		list_reverse(t_flist **lst);
+t_flist				*list_new(t_pformat *content);
+void				*list_destroy(t_flist **lst);
+void				list_push_front(t_flist **lst, t_flist *new);
+void				list_pop_front(t_flist **lst);
+t_flist				*list_reverse(t_flist *lst);
 
 #endif

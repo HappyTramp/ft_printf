@@ -1,65 +1,64 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   extract.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/10/29 00:10:36 by cacharle          #+#    #+#             */
+/*   Updated: 2019/10/29 00:11:02 by cacharle         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <stdlib.h>
 #include "header.h"
 
 char	*extract_standalone_flags(t_pformat *pformat, char *fmt)
 {
-	int		i;
-
-	i = 0;
-	while (IS_STANDALONE_FLAG(fmt[i]))
+	if (*fmt == 0)
+		return (fmt);
+	while (IS_STANDALONE_FLAG(*fmt))
 	{
-		if (!pformat->zero_padding)
-			pformat->zero_padding = fmt[i] == '0';
-		if (!pformat->left_adjusted)
-			pformat->left_adjusted = fmt[i] == '-';
-		i++;
+		if (*fmt == '0')
+			pformat->flags |= FLAG_ZERO_PADDING;
+		if (*fmt == '-')
+			pformat->flags |= FLAG_LEFT_ADJUSTED;
+		fmt++;
 	}
- 	return (fmt + i);
+	return (fmt);
 }
 
 char	*extract_min_width(t_pformat *pformat, char *fmt)
 {
-	int		i;
-	int		tmp;
-
-	i = 0;
+	if (*fmt == 0)
+		return (fmt);
 	if (*fmt == '*')
 	{
-		pformat->min_width.wildcard = TRUE;
-		i++;
+		pformat->flags |= FLAG_MIN_WIDTH_WILDCARD;
+		fmt++;
 	}
-	else
-	{
-		if (ft_isdigit(fmt[i]))
-		{
-			tmp = ft_atoi(&fmt[i]);
-			while (ft_isdigit(fmt[i]))
-				i++;
-			pformat->min_width.value = tmp;
-			pformat->min_width.wildcard = FALSE;
-		}
-	}
-	return (fmt + i);
+	if (!ft_isdigit(*fmt))
+		return (fmt);
+	pformat->min_width = ft_atoi(fmt);
+	while (*fmt && ft_isdigit(*fmt))
+		fmt++;
+	if (pformat->flags & FLAG_MIN_WIDTH_WILDCARD)
+		pformat->flags |= FLAG_MIN_WIDTH_OVERWRITE;
+	return (fmt);
 }
 
 char	*extract_precision(t_pformat *pformat, char *fmt)
 {
-	int		i;
-	int		tmp;
-
-	if (*fmt != '.')
+	if (*fmt == 0 || *fmt != '.')
 		return (fmt);
-	i = 1;
-	if (fmt[i] == '*')
+	fmt++;
+	if (*fmt == '*')
 	{
-		pformat->precision.wildcard = TRUE;
-		i++;
+		pformat->flags |= FLAG_PRECISION_WILDCARD;
+		fmt++;
 	}
-	else if (!ft_isdigit(fmt[i]))
-		pformat->precision.value = 0;
-	tmp = ft_atoi(&fmt[i]);
-	while (ft_isdigit(fmt[i]))
-		i++;
-	pformat->precision.value = tmp;
-	return (fmt + i);
+	pformat->precision = ft_atoi(fmt);
+	while (*fmt && ft_isdigit(*fmt))
+		fmt++;
+	return (fmt);
 }
