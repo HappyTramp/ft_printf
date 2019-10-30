@@ -1,9 +1,10 @@
 #include <stdarg.h>
+#include <stdlib.h>
 #include "header.h"
 
 char	*convert_ptr(va_list ap, t_pformat *pformat)
 {
-	char *str = ITOA_HEX_LOW(va_arg(ap, void*));
+	char *str = ITOA_HEX_LOW((long long unsigned int)va_arg(ap, void*));
 
 	str = handle_precision(pformat, str);
 	str = add_hex_prefix(str);

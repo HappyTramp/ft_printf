@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/28 23:19:24 by cacharle          #+#    #+#             */
-/*   Updated: 2019/10/30 00:56:05 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/10/30 04:13:18 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,24 +89,24 @@ char	*handle_padding(t_pformat *pformat, char *str)
 	return (tmp);
 }
 
-char *handle_nbr_padding(t_pformat *pformat, char *str)
-{
-	char *tmp;
-	int len = ft_strlen(str);
-	int i;
-
-	if (!(IN_STR("+-", str[0]) && pformat->flags & FLAG_ZERO_PADDING))
-		return (str);
-	tmp[0] = str[0];
-	len--;
-	i = 1;
-	while (i < pformat->min_width - len)
-		tmp[i++] = '0';
-	ft_strcpy(tmp + i , str + 1);
-	ft_strcpy(str, tmp);
-	free(tmp);
-	return (str);
-}
+/* char *handle_nbr_padding(t_pformat *pformat, char *str) */
+/* { */
+/* 	char *tmp; */
+/* 	int len = ft_strlen(str); */
+/* 	int i; */
+/*  */
+/* 	if (!(IN_STR("+-", str[0]) && pformat->flags & FLAG_ZERO_PADDING)) */
+/* 		return (str); */
+/* 	tmp[0] = str[0]; */
+/* 	len--; */
+/* 	i = 1; */
+/* 	while (i < pformat->min_width - len) */
+/* 		tmp[i++] = '0'; */
+/* 	ft_strcpy(tmp + i , str + 1); */
+/* 	ft_strcpy(str, tmp); */
+/* 	free(tmp); */
+/* 	return (str); */
+/* } */
 
 char	*handle_precision(t_pformat *pformat, char *str)
 {

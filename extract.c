@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/29 00:10:36 by cacharle          #+#    #+#             */
-/*   Updated: 2019/10/30 03:40:28 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/10/30 04:14:50 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,4 +94,5 @@ char	*extract_length_modifier(t_pformat *pformat, char *fmt)
 		pformat->flags |= FLAG_SHORT;
 		return (fmt + 1);
 	}
+	return (fmt);
 }

@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/29 00:06:46 by cacharle          #+#    #+#             */
-/*   Updated: 2019/10/30 03:53:28 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/10/30 04:14:35 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,8 @@
 # define FLAG_LONG                (1 << 10)
 # define FLAG_LONG_LONG           (1 << 11)
 
-#define ITOA_HEX_LOW(x) (ft_itoa_base(x, "0123456789abcdef"))
-#define ITOA_HEX_UP(x) (ft_itoa_base(x, "0123456789ABCDEF"))
+#define ITOA_HEX_LOW(x) (ft_itoa_unsigned_base(x, "0123456789abcdef"))
+#define ITOA_HEX_UP(x) (ft_itoa_unsigned_base(x, "0123456789ABCDEF"))
 #define ITOA_DEC(x) (ft_itoa_base(x, "0123456789"))
 
 #include <stdio.h>
@@ -109,6 +109,7 @@ char	*add_hex_prefix(char *str);
 
 int					strrchr_index(const char *s, char c);
 char		*ft_itoa_base(long long int n, char *base);
+char	*ft_itoa_unsigned_base(long long unsigned int n, char *base);
 
 /*
 ** extract.c
@@ -117,6 +118,7 @@ char		*ft_itoa_base(long long int n, char *base);
 char				*extract_standalone_flags(t_pformat *pformat, char *fmt);
 char				*extract_min_width(t_pformat *pformat, char *fmt);
 char				*extract_precision(t_pformat *pformat, char *fmt);
+char	*extract_length_modifier(t_pformat *pformat, char *fmt);
 
 /*
 ** list.c

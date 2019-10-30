@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/29 00:11:33 by cacharle          #+#    #+#             */
-/*   Updated: 2019/10/30 03:41:02 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/10/30 04:13:56 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,9 @@ int		parse(char *format, t_flist **flist)
 		if (format[-1] != '%')
 			continue;
 		if ((parsed = parse_reduced(format)) == NULL)
-			return (list_destroy(flist));
+			return ((int)list_destroy(flist));
 		if ((tmp = list_new(parsed)) == NULL)
-			return (list_destroy(flist));
+			return ((int)list_destroy(flist));
 		list_push_front(flist, tmp);
 		format += (*flist)->content->len;
 	}
