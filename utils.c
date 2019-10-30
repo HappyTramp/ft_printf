@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/29 00:12:40 by cacharle          #+#    #+#             */
-/*   Updated: 2019/10/30 04:06:52 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/10/30 18:04:21 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ char		*ft_itoa_base(long long int n, char *base)
 
 	radix = ft_strlen(base);
 	len = nbrlen_radix(n, radix);
+	/* printf("%d\n", len); */
 	if ((str = (char*)malloc(sizeof(char) * (len + 1))) == NULL)
 		return (NULL);
 	str[len] = '\0';
@@ -69,9 +70,11 @@ char		*ft_itoa_base(long long int n, char *base)
 		str[0] = '-';
 	while (--len >= (n < 0 ? 1 : 0))
 	{
+		/* printf("u > %ld\n", u_nbr); */
 		str[len] = base[u_nbr % radix];
 		u_nbr /= radix;
 	}
+	/* printf("%s\n", str); */
 	return (str);
 }
 
@@ -106,5 +109,15 @@ char	*ft_itoa_unsigned_base(long long unsigned int n, char *base)
 		str[len] = base[n % radix];
 		n /= radix;
 	}
+	return (str);
+}
+
+char	*ft_strtoupper(char *str)
+{
+	int i;
+
+	i = -1;
+	while (str[++i])
+		str[i] = ft_toupper(str[i]);
 	return (str);
 }

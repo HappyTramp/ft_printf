@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/29 00:06:46 by cacharle          #+#    #+#             */
-/*   Updated: 2019/10/30 04:14:35 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/10/30 16:59:55 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,8 @@
 # define FLAG_LONG_LONG           (1 << 11)
 
 #define ITOA_HEX_LOW(x) (ft_itoa_unsigned_base(x, "0123456789abcdef"))
-#define ITOA_HEX_UP(x) (ft_itoa_unsigned_base(x, "0123456789ABCDEF"))
-#define ITOA_DEC(x) (ft_itoa_base(x, "0123456789"))
+#define ITOA_HEX_UP(x)  (ft_itoa_unsigned_base(x, "0123456789ABCDEF"))
+#define ITOA_DEC(x)     (ft_itoa_base(x, "0123456789"))
 
 #include <stdio.h>
 
@@ -65,7 +65,8 @@ typedef struct
 	int				min_width;
 	t_flags			flags;
 	char			type;
-	int				len;
+	int				fmt_len;
+	int				size;
 }					t_pformat;
 
 typedef struct		s_flist
@@ -110,6 +111,7 @@ char	*add_hex_prefix(char *str);
 int					strrchr_index(const char *s, char c);
 char		*ft_itoa_base(long long int n, char *base);
 char	*ft_itoa_unsigned_base(long long unsigned int n, char *base);
+char	*ft_strtoupper(char *str);
 
 /*
 ** extract.c
@@ -140,8 +142,7 @@ char	*convert_str(va_list ap, t_pformat *pformat);
 char	*convert_ptr(va_list ap, t_pformat *pformat);
 char	*convert_int(va_list ap, t_pformat *pformat);
 char	*convert_uint(va_list ap, t_pformat *pformat);
-char	*convert_hex_low(va_list ap, t_pformat *pformat);
-char	*convert_hex_up(va_list ap, t_pformat *pformat);
+char	*convert_hex(va_list ap, t_pformat *pformat);
 char	*convert_percent(va_list ap, t_pformat *pformat);
 
 #endif

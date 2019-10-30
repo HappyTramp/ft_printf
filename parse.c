@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/29 00:11:33 by cacharle          #+#    #+#             */
-/*   Updated: 2019/10/30 04:13:56 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/10/30 17:02:09 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int		parse(char *format, t_flist **flist)
 		if ((tmp = list_new(parsed)) == NULL)
 			return ((int)list_destroy(flist));
 		list_push_front(flist, tmp);
-		format += (*flist)->content->len;
+		format += (*flist)->content->fmt_len;
 	}
 	*flist = list_reverse(*flist);
 	return (1);
@@ -58,9 +58,9 @@ t_pformat	*parse_reduced(char *fmt)
 	pformat->precision = -1;
 	pformat->min_width = -1;
 	pformat->flags = 0;
-	pformat->len = ft_strlen(fmt);
-	pformat->type = fmt[pformat->len - 1];
-	fmt[pformat->len - 1] = '\0';
+	pformat->fmt_len = ft_strlen(fmt);
+	pformat->type = fmt[pformat->fmt_len - 1];
+	fmt[pformat->fmt_len - 1] = '\0';
 	fmt = extract_standalone_flags(pformat, fmt);
 	fmt = extract_min_width(pformat, fmt);
 	fmt = extract_precision(pformat, fmt);

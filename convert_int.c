@@ -26,14 +26,18 @@ char	*convert_int(va_list ap, t_pformat *pformat)
 	str = handle_precision(pformat, str);
 	if (pformat->flags & FLAG_ZERO_PADDING)
 	{
-		if (is_neg || pformat->flags & FLAG_SIGNED || pformat->flags & FLAG_SPACE)
+		if (is_neg || pformat->flags & (FLAG_SIGNED | FLAG_SPACE))
 			pformat->min_width--;
 		/* pformat->min_width--; */
 		str = handle_padding(pformat, str);
 	}
+	/* str[ft_strlen(str)] = 0; */
 	if (is_neg)
+	{
 		tmp = ft_strjoin("-", str);
-	else if (pformat->flags & FLAG_SIGNED || pformat->flags & FLAG_SPACE)
+	/* printf("%s\n", str); */
+	}
+	else if (pformat->flags & (FLAG_SIGNED | FLAG_SPACE))
 		tmp = ft_strjoin(pformat->flags & FLAG_SPACE ? " " : "+", str);
 	else
 		tmp = ft_strdup(str);

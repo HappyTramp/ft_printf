@@ -6,7 +6,7 @@
 #    By: cacharle <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/28 17:41:14 by cacharle          #+#    #+#              #
-#    Updated: 2019/10/29 23:00:05 by cacharle         ###   ########.fr        #
+#    Updated: 2019/10/30 15:58:32 by cacharle         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,7 @@ MAKE = make -j4
 NAME = libftprintf.a
 SRC = ft_printf.c utils.c printer.c parse.c list.c extract.c \
 	  convert_int.c convert_uint.c convert_char.c convert_str.c \
-	  convert_ptr.c convert_hex_low.c convert_hex_up.c convert_percent.c
+	  convert_ptr.c convert_hex.c convert_percent.c
 OBJ = $(SRC:.c=.o)
 INCLUDE = header.h
 

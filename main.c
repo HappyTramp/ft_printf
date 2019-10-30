@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/28 04:25:09 by cacharle          #+#    #+#             */
-/*   Updated: 2019/10/30 03:15:22 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/10/30 17:35:44 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,7 @@ int main()
 {
 	int test;
 
-	printf("%d\n", ft_printf("%", 4));
-	printf("%d\n", printf("aa%bb", 4));
+	ft_printf("%.37ld", -22337203685477l);
     /* ft_printf("char:                    %c\n", 'r'); */
     /* ft_printf("string:                  %s\n", "bonjour"); */
     /* ft_printf("pointer:                 %p\n", &test); */

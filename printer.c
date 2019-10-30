@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/28 23:19:24 by cacharle          #+#    #+#             */
-/*   Updated: 2019/10/30 04:13:18 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/10/30 18:04:06 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,9 @@ char	*convert_type(va_list ap, t_pformat *pformat)
 	if (pformat->type == 'u')
 		return (convert_uint(ap, pformat));
 	if (pformat->type == 'x')
-		return (convert_hex_low(ap, pformat));
+		return (convert_hex(ap, pformat));
 	if (pformat->type == 'X')
-		return (convert_hex_up(ap, pformat));
+		return (convert_hex(ap, pformat));
 	if (pformat->type == '%')
 		return (convert_percent(ap, pformat));
 	return (NULL);
@@ -116,26 +116,13 @@ char	*handle_precision(t_pformat *pformat, char *str)
 	len = ft_strlen(str);
 	if (pformat->precision == 0 && str[0] == '0')
 		return (ft_strdup(""));
-	else if (IN_STR("diuxXp", pformat->type) && len < pformat->precision)
-	{
-		if ((tmp = (char*)malloc(sizeof(char) * (pformat->precision + 1))) == NULL)
-			return (NULL);
-		if (IN_STR("+-", str[0]))
-		{
-			tmp[0] = str[0];
-			len--;
-			ft_strcpy(tmp + pformat->precision - len + 1, str + 1);
-			while (pformat->precision-- > len)
-				tmp[pformat->precision - len + 1] = '0';
-			ft_strcpy(str, tmp);
-			free(tmp);
-			return (str);
-		}
-		ft_strcpy(tmp + pformat->precision - len, str);
-		while (pformat->precision-- > len)
-			tmp[pformat->precision - len] = '0';
-		ft_strcpy(str, tmp);
-		free(tmp);
-	}
-	return (str);
+	if (!IN_STR("diuxXp", pformat->type) || len >= pformat->precision)
+		return (str);
+	if ((tmp = (char*)malloc(sizeof(char) * (pformat->precision + 1))) == NULL)
+		return (NULL);
+	ft_strcpy(tmp + pformat->precision - len, str);
+	while (pformat->precision-- > len)
+		tmp[pformat->precision - len] = '0';
+	free(str);
+	return (tmp);
 }

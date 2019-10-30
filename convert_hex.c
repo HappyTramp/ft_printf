@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "header.h"
 
-char	*convert_hex_up(va_list ap, t_pformat *pformat)
+char	*convert_hex(va_list ap, t_pformat *pformat)
 {
 	long long unsigned int n;
 
@@ -17,7 +17,10 @@ char	*convert_hex_up(va_list ap, t_pformat *pformat)
 	else
 		n = va_arg(ap, unsigned int);
 
-	char *str = ITOA_HEX_UP(n);
+	char *str;
+	str = ITOA_HEX_LOW(n);
+	if (pformat->type == 'X')
+		ft_strtoupper(str);
 	str = handle_precision(pformat, str);
 	if (pformat->flags & FLAG_ZERO_PADDING)
 	{
@@ -27,7 +30,7 @@ char	*convert_hex_up(va_list ap, t_pformat *pformat)
 	}
 	if (pformat->flags & FLAG_ALTERNATE && n != 0)
 	{
-		char *tmp = ft_strjoin("0X", str);
+		char *tmp = ft_strjoin(pformat->type == 'X' ? "0X" : "0x", str);
 		free(str);
 		str = tmp;
 	}
