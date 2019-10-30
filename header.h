@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/29 00:06:46 by cacharle          #+#    #+#             */
-/*   Updated: 2019/10/29 16:09:31 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/10/30 03:53:28 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 # define HEX_MAJ_SYMBOLS "0123456789ABCDEF"
 
 # define IN_STR(str, c) (ft_strchr(str, c) != NULL)
-# define IS_STANDALONE_FLAG(c) (IN_STR("0-+", c))
+# define IS_STANDALONE_FLAG(c) (IN_STR("0-+ #", c))
 
 # define CONVERSIONS_STR "cspdiuxX%"
 
@@ -37,25 +37,34 @@
 # define CONVERSION_HEX_UPPER 'X'
 # define CONVERSION_PERCENT '%'
 
-# define FLAG_LEFT_ADJUSTED       0b00000001
-# define FLAG_ZERO_PADDING        0b00000010
-# define FLAG_MIN_WIDTH_WILDCARD  0b00000100
-# define FLAG_PRECISION_WILDCARD  0b00001000
-# define FLAG_MIN_WIDTH_OVERWRITE 0b00010000
-# define FLAG_SIGNED              0b00100000
+# define FLAG_LEFT_ADJUSTED       (1 << 0)
+# define FLAG_ZERO_PADDING        (1 << 1)
+# define FLAG_MIN_WIDTH_WILDCARD  (1 << 2)
+# define FLAG_PRECISION_WILDCARD  (1 << 3)
+# define FLAG_MIN_WIDTH_OVERWRITE (1 << 4)
+# define FLAG_SIGNED              (1 << 5)
+# define FLAG_SPACE               (1 << 6)
+# define FLAG_ALTERNATE           (1 << 7)
+# define FLAG_SHORT_SHORT         (1 << 8)
+# define FLAG_SHORT               (1 << 9)
+# define FLAG_LONG                (1 << 10)
+# define FLAG_LONG_LONG           (1 << 11)
+
+#define ITOA_HEX_LOW(x) (ft_itoa_base(x, "0123456789abcdef"))
+#define ITOA_HEX_UP(x) (ft_itoa_base(x, "0123456789ABCDEF"))
+#define ITOA_DEC(x) (ft_itoa_base(x, "0123456789"))
 
 #include <stdio.h>
 
-typedef char			t_conversion;
 typedef int				t_bool;
-typedef unsigned char	t_flags;
+typedef short			t_flags;
 
 typedef struct
 {
 	int				precision;
 	int				min_width;
 	t_flags			flags;
-	t_conversion	conversion;
+	char			type;
 	int				len;
 }					t_pformat;
 
@@ -64,6 +73,12 @@ typedef struct		s_flist
 	struct s_flist	*next;
 	t_pformat		*content;
 }					t_flist;
+
+typedef struct
+{
+	char	*(*func)(va_list ap, t_pformat *pformat);
+	char	type;
+}					t_converter;
 
 /*
 ** ft_printf.c
@@ -75,7 +90,7 @@ int					ft_printf(const char *format, ...);
 ** parse.c
 */
 
-t_flist				*parse(char *format);
+int					parse(char *format, t_flist **flist);
 t_pformat			*parse_reduced(char *fmt);
 
 /*
@@ -83,16 +98,17 @@ t_pformat			*parse_reduced(char *fmt);
 */
 
 char	*convert(t_pformat *pformat, va_list ap);
-char	*convert_type(t_conversion conversion, va_list ap);
+char	*convert_type(va_list ap, t_pformat *pformat);
 char	*handle_padding(t_pformat *pformat, char *str);
 char	*handle_precision(t_pformat *pformat, char *str);
-char				*add_address_prefix(char *addr);
+char	*add_hex_prefix(char *str);
 
 /*
 ** utils.c
 */
 
 int					strrchr_index(const char *s, char c);
+char		*ft_itoa_base(long long int n, char *base);
 
 /*
 ** extract.c
@@ -111,5 +127,19 @@ void				*list_destroy(t_flist **lst);
 void				list_push_front(t_flist **lst, t_flist *new);
 void				list_pop_front(t_flist **lst);
 t_flist				*list_reverse(t_flist *lst);
+
+
+/*
+** convert_*.c
+*/
+
+char	*convert_char(va_list ap, t_pformat *pformat);
+char	*convert_str(va_list ap, t_pformat *pformat);
+char	*convert_ptr(va_list ap, t_pformat *pformat);
+char	*convert_int(va_list ap, t_pformat *pformat);
+char	*convert_uint(va_list ap, t_pformat *pformat);
+char	*convert_hex_low(va_list ap, t_pformat *pformat);
+char	*convert_hex_up(va_list ap, t_pformat *pformat);
+char	*convert_percent(va_list ap, t_pformat *pformat);
 
 #endif

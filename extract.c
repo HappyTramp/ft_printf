@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/29 00:10:36 by cacharle          #+#    #+#             */
-/*   Updated: 2019/10/29 18:17:38 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/10/30 03:40:28 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,14 @@ char	*extract_standalone_flags(t_pformat *pformat, char *fmt)
 			pformat->flags |= FLAG_LEFT_ADJUSTED;
 		if (*fmt == '+')
 			pformat->flags |= FLAG_SIGNED;
+		if (*fmt == ' ')
+			pformat->flags |= FLAG_SPACE;
+		if (*fmt == '#')
+			pformat->flags |= FLAG_ALTERNATE;
 		fmt++;
 	}
+	if (pformat->flags & FLAG_SIGNED)
+		pformat->flags &= ~FLAG_SPACE;
 	return (fmt);
 }
 
@@ -64,4 +70,28 @@ char	*extract_precision(t_pformat *pformat, char *fmt)
 	while (*fmt && ft_isdigit(*fmt))
 		fmt++;
 	return (fmt);
+}
+
+char	*extract_length_modifier(t_pformat *pformat, char *fmt)
+{
+	if (fmt[0] && fmt[0] == 'l')
+	{
+		if (fmt[1] && fmt[1] == 'l')
+		{
+			pformat->flags |= FLAG_LONG_LONG;
+			return (fmt + 2);
+		}
+		pformat->flags |= FLAG_LONG;
+		return (fmt + 1);
+	}
+	if (fmt[0] && fmt[0] == 'h')
+	{
+		if (fmt[1] && fmt[1] == 'h')
+		{
+			pformat->flags |= FLAG_SHORT_SHORT;
+			return (fmt + 2);
+		}
+		pformat->flags |= FLAG_SHORT;
+		return (fmt + 1);
+	}
 }

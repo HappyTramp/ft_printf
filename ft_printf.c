@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/29 00:15:28 by cacharle          #+#    #+#             */
-/*   Updated: 2019/10/29 18:28:15 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/10/30 02:01:25 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	ft_printf(const char *format, ...)
 	if (format == NULL)
 		return (-1);
 	str = ft_strdup(format);
-	if ((format_list = parse(str)) == NULL)
+	if (!parse(str, &format_list))
 		return (-1);
 	free(str);
 	va_start(ap, format);

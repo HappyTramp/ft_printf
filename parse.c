@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/29 00:11:33 by cacharle          #+#    #+#             */
-/*   Updated: 2019/10/29 05:19:00 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/10/30 03:41:02 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,26 +19,26 @@
 ** %(?:\d+\$)?[-]?(?:[0]|'.{1})?-?\d*(?:\.\d+)?[cdusxX]
 */
 
-t_flist		*parse(char *format)
+int		parse(char *format, t_flist **flist)
 {
-	t_flist		*format_list;
 	t_flist		*tmp;
 	t_pformat	*parsed;
 
-	format_list = NULL;
+	*flist = NULL;
 	while (*format)
 	{
 		format++;
 		if (format[-1] != '%')
 			continue;
 		if ((parsed = parse_reduced(format)) == NULL)
-			return (list_destroy(&format_list));
+			return (list_destroy(flist));
 		if ((tmp = list_new(parsed)) == NULL)
-			return (list_destroy(&format_list));
-		list_push_front(&format_list, tmp);
-		format += format_list->content->len;
+			return (list_destroy(flist));
+		list_push_front(flist, tmp);
+		format += (*flist)->content->len;
 	}
-	return (list_reverse(format_list));
+	*flist = list_reverse(*flist);
+	return (1);
 }
 
 t_pformat	*parse_reduced(char *fmt)
@@ -59,11 +59,12 @@ t_pformat	*parse_reduced(char *fmt)
 	pformat->min_width = -1;
 	pformat->flags = 0;
 	pformat->len = ft_strlen(fmt);
-	pformat->conversion = fmt[pformat->len - 1];
+	pformat->type = fmt[pformat->len - 1];
 	fmt[pformat->len - 1] = '\0';
 	fmt = extract_standalone_flags(pformat, fmt);
 	fmt = extract_min_width(pformat, fmt);
-	extract_precision(pformat, fmt);
+	fmt = extract_precision(pformat, fmt);
+	extract_length_modifier(pformat, fmt);
 	free(start);
 	return (pformat);
 }
