@@ -6,15 +6,15 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/28 23:19:24 by cacharle          #+#    #+#             */
-/*   Updated: 2019/10/30 18:04:06 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/10/30 23:30:58 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdarg.h>
+#include "libft.h"
 #include "header.h"
-
 
 char	*convert(t_pformat *pformat, va_list ap)
 {
@@ -88,25 +88,6 @@ char	*handle_padding(t_pformat *pformat, char *str)
 	free(str);
 	return (tmp);
 }
-
-/* char *handle_nbr_padding(t_pformat *pformat, char *str) */
-/* { */
-/* 	char *tmp; */
-/* 	int len = ft_strlen(str); */
-/* 	int i; */
-/*  */
-/* 	if (!(IN_STR("+-", str[0]) && pformat->flags & FLAG_ZERO_PADDING)) */
-/* 		return (str); */
-/* 	tmp[0] = str[0]; */
-/* 	len--; */
-/* 	i = 1; */
-/* 	while (i < pformat->min_width - len) */
-/* 		tmp[i++] = '0'; */
-/* 	ft_strcpy(tmp + i , str + 1); */
-/* 	ft_strcpy(str, tmp); */
-/* 	free(tmp); */
-/* 	return (str); */
-/* } */
 
 char	*handle_precision(t_pformat *pformat, char *str)
 {

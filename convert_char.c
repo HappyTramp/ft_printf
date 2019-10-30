@@ -1,28 +1,33 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   convert_char.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/10/30 23:22:29 by cacharle          #+#    #+#             */
+/*   Updated: 2019/10/30 23:33:44 by cacharle         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <stdarg.h>
 #include <stdlib.h>
+#include "libft.h"
 #include "header.h"
 
-char	*convert_char(va_list ap, t_pformat *pformat)
+static char	*handle_padding_char(t_pformat *pformat, char *str)
 {
-	char *str = ft_strnew(2);
-	if (str == NULL)
-		return (NULL);
-	str[0] = va_arg(ap, int);
-	str[1] = '\0';
+	char	*tmp;
+	int		i;
 
-	/* str = handle_padding(pformat, str); */
-	pformat->size = 1;//ft_strlen(str);
-	/* return (str); */
-	char *tmp;
-	int i;
+	pformat->size = 1;
 	if (1 >= pformat->min_width)
 		return (str);
 	if ((tmp = (char*)malloc(sizeof(char) * (pformat->min_width + 1))) == NULL)
 		return (NULL);
 	if (pformat->flags & FLAG_LEFT_ADJUSTED)
 	{
-		i = 1;
-		ft_memcpy(tmp, str, 2);
+		ft_memcpy(tmp, str, (i = 1) + 1);
 		while (i < pformat->min_width)
 			tmp[i++] = ' ';
 		tmp[i] = 0;
@@ -37,5 +42,15 @@ char	*convert_char(va_list ap, t_pformat *pformat)
 	free(str);
 	pformat->size = pformat->min_width;
 	return (tmp);
-	return (str);
+}
+
+char		*convert_char(va_list ap, t_pformat *pformat)
+{
+	char	*str;
+
+	if ((str = ft_strnew(2)) == NULL)
+		return (NULL);
+	str[0] = va_arg(ap, int);
+	str[1] = '\0';
+	return (handle_padding_char(pformat, str));
 }

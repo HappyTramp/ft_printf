@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/29 00:11:33 by cacharle          #+#    #+#             */
-/*   Updated: 2019/10/30 17:02:09 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/10/30 23:31:12 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 ** %(?:\d+\$)?[-]?(?:[0]|'.{1})?-?\d*(?:\.\d+)?[cdusxX]
 */
 
-int		parse(char *format, t_flist **flist)
+int			parse(char *format, t_flist **flist)
 {
 	t_flist		*tmp;
 	t_pformat	*parsed;

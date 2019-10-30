@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/29 00:15:28 by cacharle          #+#    #+#             */
-/*   Updated: 2019/10/30 17:10:32 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/10/30 19:58:36 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,12 +49,12 @@ int	ft_printf(const char *format, ...)
 		if (flist->content->type == 'c')
 		{
 			write(1, str, flist->content->size);
-			/* printf("\n%d\n", flist->content->size); */
 			print_len++;
 			free(str);
 		}
 		else
 		{
+
 			ft_putstr(str);
 			print_len += ft_strlen(str);
 			free(str);

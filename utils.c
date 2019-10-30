@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/29 00:12:40 by cacharle          #+#    #+#             */
-/*   Updated: 2019/10/30 18:04:21 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/10/30 23:15:27 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #define MIN_INT (1 << 31)
 #define MAX_INT (~(1 << 31))
 
-int		strrchr_index(const char *s, char c)
+int			strrchr_index(const char *s, char c)
 {
 	int i;
 
@@ -54,14 +54,13 @@ static int	nbrlen_radix(long long int nbr, int radix)
 
 char		*ft_itoa_base(long long int n, char *base)
 {
-	char				*str;
-	int					len;
-	int					radix;
+	char					*str;
+	int						len;
+	int						radix;
 	long long unsigned int	u_nbr;
 
 	radix = ft_strlen(base);
 	len = nbrlen_radix(n, radix);
-	/* printf("%d\n", len); */
 	if ((str = (char*)malloc(sizeof(char) * (len + 1))) == NULL)
 		return (NULL);
 	str[len] = '\0';
@@ -70,11 +69,9 @@ char		*ft_itoa_base(long long int n, char *base)
 		str[0] = '-';
 	while (--len >= (n < 0 ? 1 : 0))
 	{
-		/* printf("u > %ld\n", u_nbr); */
 		str[len] = base[u_nbr % radix];
 		u_nbr /= radix;
 	}
-	/* printf("%s\n", str); */
 	return (str);
 }
 
@@ -93,7 +90,7 @@ static int	nbrlen_unsigned_radix(long long unsigned int nbr, int radix)
 	return (counter);
 }
 
-char	*ft_itoa_unsigned_base(long long unsigned int n, char *base)
+char		*ft_itoa_unsigned_base(long long unsigned int n, char *base)
 {
 	char				*str;
 	int					len;
@@ -112,7 +109,7 @@ char	*ft_itoa_unsigned_base(long long unsigned int n, char *base)
 	return (str);
 }
 
-char	*ft_strtoupper(char *str)
+char		*ft_strtoupper(char *str)
 {
 	int i;
 
