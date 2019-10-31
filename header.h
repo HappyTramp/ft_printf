@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/29 00:06:46 by cacharle          #+#    #+#             */
-/*   Updated: 2019/10/30 23:13:41 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/10/31 00:04:28 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,17 +25,7 @@
 # define IN_STR(str, c) (ft_strchr(str, c) != NULL)
 # define IS_STANDALONE_FLAG(c) (IN_STR("0-+ #'", c))
 
-# define CONVERSIONS_STR "cspdiuxX%"
-
-# define CONVERSION_CHAR 'c'
-# define CONVERSION_STR 's'
-# define CONVERSION_PTR 'p'
-# define CONVERSION_DECIMAL 'd'
-# define CONVERSION_INT 'i'
-# define CONVERSION_UINT 'u'
-# define CONVERSION_HEX_LOWER 'x'
-# define CONVERSION_HEX_UPPER 'X'
-# define CONVERSION_PERCENT '%'
+# define CONVERSIONS_STR "ncspdiuxX%"
 
 # define FLAG_LEFT_ADJUSTED       (1 << 0)
 # define FLAG_ZERO_PADDING        (1 << 1)
@@ -67,6 +57,7 @@ typedef struct
 	char			type;
 	int				fmt_len;
 	int				size;
+	int				*written;
 }					t_pformat;
 
 typedef struct		s_flist
@@ -138,5 +129,6 @@ char				*convert_int(va_list ap, t_pformat *pformat);
 char				*convert_uint(va_list ap, t_pformat *pformat);
 char				*convert_hex(va_list ap, t_pformat *pformat);
 char				*convert_percent(va_list ap, t_pformat *pformat);
+char				*convert_written(va_list ap, t_pformat *pformat);
 
 #endif

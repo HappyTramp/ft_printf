@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/29 00:15:28 by cacharle          #+#    #+#             */
-/*   Updated: 2019/10/30 19:58:36 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/10/31 00:10:04 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,14 +38,23 @@ int	ft_printf(const char *format, ...)
 		if (format[i] != '%')
 		{
 			write(STDOUT_FILENO, format + i, 1);
+			print_len++;
 			continue ;
 		}
 		str = convert(flist->content, ap);
+		if (str == NULL && flist->content->type == 'n')
+		{
+			*flist->content->written = print_len;
+			i += flist->content->fmt_len;
+			list_pop_front(&flist);
+			continue;
+		}
 		if (str == NULL)
 		{
 			list_destroy(&flist);
 			return (-1);
 		}
+		printf("\n%c\n", flist->content->type);
 		if (flist->content->type == 'c')
 		{
 			write(1, str, flist->content->size);
