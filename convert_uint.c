@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/30 23:25:40 by cacharle          #+#    #+#             */
-/*   Updated: 2019/11/04 00:18:39 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/11/04 19:20:27 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@ char	*convert_uint(va_list ap, t_pformat *pformat)
 	long long unsigned int	n;
 
 	if (pformat->flags & FLAG_SHORT)
-		n = va_arg(ap, int);
+		n = (unsigned short)va_arg(ap, int);
 	else if (pformat->flags & FLAG_SHORT_SHORT)
-		n = va_arg(ap, int);
+		n = (unsigned char)va_arg(ap, int);
 	else if (pformat->flags & FLAG_LONG)
 		n = va_arg(ap, long unsigned int);
 	else if (pformat->flags & FLAG_LONG_LONG)

@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/30 23:23:06 by cacharle          #+#    #+#             */
-/*   Updated: 2019/11/02 02:09:15 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/11/04 19:23:28 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,11 @@ char	*convert_hex(va_list ap, t_pformat *pformat)
 	char					*tmp;
 	long long unsigned int	n;
 
-	if (pformat->flags & FLAG_LONG)
+	if (pformat->flags & FLAG_SHORT)
+		n = (unsigned short)va_arg(ap, int);
+	else if (pformat->flags & FLAG_SHORT_SHORT)
+		n = (unsigned char)va_arg(ap, int);
+	else if (pformat->flags & FLAG_LONG)
 		n = va_arg(ap, long unsigned int);
 	else if (pformat->flags & FLAG_LONG_LONG)
 		n = va_arg(ap, long long unsigned int);
