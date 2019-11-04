@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/30 23:29:53 by cacharle          #+#    #+#             */
-/*   Updated: 2019/10/30 23:32:21 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/11/04 01:26:38 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,11 @@ char	*convert_int(va_list ap, t_pformat *pformat)
 	long long int	n;
 	char			*str;
 
-	if (pformat->flags & FLAG_LONG)
+	if (pformat->flags & FLAG_SHORT)
+		n = (short)va_arg(ap, int);
+	else if (pformat->flags & FLAG_SHORT_SHORT)
+		n = (signed char)va_arg(ap, int);
+	else if (pformat->flags & FLAG_LONG)
 		n = va_arg(ap, long int);
 	else if (pformat->flags & FLAG_LONG_LONG)
 		n = va_arg(ap, long long int);

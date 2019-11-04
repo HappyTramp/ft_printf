@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/30 23:38:28 by cacharle          #+#    #+#             */
-/*   Updated: 2019/10/30 23:59:05 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/11/04 00:21:16 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,16 @@
 
 char	*convert_written(va_list ap, t_pformat *pformat)
 {
-	pformat->written = va_arg(ap, int*);
+
+	if (pformat->flags & FLAG_SHORT)
+		pformat->written = va_arg(ap, signed char*);
+	if (pformat->flags & FLAG_SHORT_SHORT)
+		pformat->written = va_arg(ap, short*);
+	if (pformat->flags & FLAG_LONG)
+		pformat->written = va_arg(ap, long int*);
+	if (pformat->flags & FLAG_LONG_LONG)
+		pformat->written = va_arg(ap, long long int*);
+	else
+		pformat->written = va_arg(ap, int*);
 	return (NULL);
 }

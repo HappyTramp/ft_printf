@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/28 04:25:09 by cacharle          #+#    #+#             */
-/*   Updated: 2019/10/31 00:08:11 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/11/04 01:21:36 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,21 @@
 
 int main()
 {
-	int test;
+	int test = 42;
 
-	ft_printf("bonjour%nyi", &test);
-	ft_printf("%d\n", test);
+	/* ft_printf("%"); */
+	   /* printf("%"); */
+	/* ft_printf("32 This is an int : %0d\n\n", 0); */
+	/*    printf("32 This is an int : %0d\n\n", 0); */
+	ft_printf("{%05.*d}\n", -15, 42);
+	   printf("{%05.*d}\n", -15, 42);
+	/* ft_printf("%050 d\n", 500); */
+	/*    printf("%050 d\n", 500); */
+	/* ft_printf("%020.5s\n", "Hallo heimur"); */
+	/*    printf("%020.5s\n", "Hallo heimur"); */
+	/* ft_printf("bonjour%nyi", &test); */
+	/* ft_printf("%hi\n", 32768); */
+    /*    printf("%hi\n", 32768); */
 	/* ft_printf("%.37ld", -22337203685477l); */
     /* ft_printf("char:                    %c\n", 'r'); */
     /* ft_printf("string:                  %s\n", "bonjour"); */

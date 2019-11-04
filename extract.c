@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/29 00:10:36 by cacharle          #+#    #+#             */
-/*   Updated: 2019/10/30 19:42:16 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/11/04 01:32:44 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,8 @@ char	*extract_min_width(t_pformat *pformat, char *fmt)
 
 char	*extract_precision(t_pformat *pformat, char *fmt)
 {
-	if (*fmt == 0 || *fmt != '.')
+	if (*fmt == '\0' || *fmt != '.')
 		return (fmt);
-	pformat->flags &= ~FLAG_ZERO_PADDING;
 	fmt++;
 	if (*fmt == '*')
 	{

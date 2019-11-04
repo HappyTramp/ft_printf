@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/28 23:19:24 by cacharle          #+#    #+#             */
-/*   Updated: 2019/10/30 23:56:21 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/11/04 01:31:49 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,8 @@ char	*handle_precision(t_pformat *pformat, char *str)
 	int		len;
 	char	*tmp;
 
+	if (ft_strchr("diuxX", pformat->type) && pformat->precision > 0)
+		pformat->flags &= ~FLAG_ZERO_PADDING;
 	len = ft_strlen(str);
 	if (pformat->precision == 0 && str[0] == '0')
 		return (ft_strdup(""));

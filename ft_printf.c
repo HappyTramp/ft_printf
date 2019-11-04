@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/29 00:15:28 by cacharle          #+#    #+#             */
-/*   Updated: 2019/10/31 00:10:04 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/11/04 00:28:38 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ int	ft_printf(const char *format, ...)
 	va_start(ap, format);
 	print_len = 0;
 	i = -1;
+	/* int *a = NULL; */
+	/* printf("%d", *a); */
 	while (format[++i])
 	{
 		if (format[i] != '%')
@@ -44,7 +46,8 @@ int	ft_printf(const char *format, ...)
 		str = convert(flist->content, ap);
 		if (str == NULL && flist->content->type == 'n')
 		{
-			*flist->content->written = print_len;
+			if (flist->content->written != NULL)
+				*flist->content->written = print_len;
 			i += flist->content->fmt_len;
 			list_pop_front(&flist);
 			continue;
@@ -54,7 +57,6 @@ int	ft_printf(const char *format, ...)
 			list_destroy(&flist);
 			return (-1);
 		}
-		printf("\n%c\n", flist->content->type);
 		if (flist->content->type == 'c')
 		{
 			write(1, str, flist->content->size);
@@ -63,7 +65,6 @@ int	ft_printf(const char *format, ...)
 		}
 		else
 		{
-
 			ft_putstr(str);
 			print_len += ft_strlen(str);
 			free(str);
@@ -73,7 +74,7 @@ int	ft_printf(const char *format, ...)
 	}
 	list_destroy(&flist);
 	va_end(ap);
-	return (print_len + i);
+	return (print_len);
 }
 
 char	*ft_strappend(char *dest, char *src)
