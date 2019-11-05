@@ -6,25 +6,23 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/30 23:38:28 by cacharle          #+#    #+#             */
-/*   Updated: 2019/11/04 00:21:16 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/11/05 23:59:24 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdarg.h>
 #include "header.h"
 
 char	*convert_written(va_list ap, t_pformat *pformat)
 {
-
 	if (pformat->flags & FLAG_SHORT)
-		pformat->written = va_arg(ap, signed char*);
+		pformat->written = (long long int*)va_arg(ap, signed char*);
 	if (pformat->flags & FLAG_SHORT_SHORT)
-		pformat->written = va_arg(ap, short*);
+		pformat->written = (long long int*)va_arg(ap, short*);
 	if (pformat->flags & FLAG_LONG)
-		pformat->written = va_arg(ap, long int*);
+		pformat->written = (long long int*)va_arg(ap, long int*);
 	if (pformat->flags & FLAG_LONG_LONG)
 		pformat->written = va_arg(ap, long long int*);
 	else
-		pformat->written = va_arg(ap, int*);
+		pformat->written = (long long int*)va_arg(ap, int*);
 	return (NULL);
 }

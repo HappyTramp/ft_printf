@@ -6,11 +6,10 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/29 00:14:50 by cacharle          #+#    #+#             */
-/*   Updated: 2019/10/29 00:14:51 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/11/05 23:45:42 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
 #include "header.h"
 
 t_flist	*list_new(t_pformat *content)

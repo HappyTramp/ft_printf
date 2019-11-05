@@ -6,14 +6,10 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/29 00:15:28 by cacharle          #+#    #+#             */
-/*   Updated: 2019/11/04 00:28:38 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/11/06 00:01:32 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-#include <stdlib.h>
-#include <stdarg.h>
-#include "libft.h"
 #include "header.h"
 
 int	ft_printf(const char *format, ...)
@@ -33,8 +29,6 @@ int	ft_printf(const char *format, ...)
 	va_start(ap, format);
 	print_len = 0;
 	i = -1;
-	/* int *a = NULL; */
-	/* printf("%d", *a); */
 	while (format[++i])
 	{
 		if (format[i] != '%')
@@ -44,7 +38,7 @@ int	ft_printf(const char *format, ...)
 			continue ;
 		}
 		str = convert(flist->content, ap);
-		if (str == NULL && flist->content->type == 'n')
+		if (str == NULL && flist->content->specifier == 'n')
 		{
 			if (flist->content->written != NULL)
 				*flist->content->written = print_len;
@@ -57,7 +51,7 @@ int	ft_printf(const char *format, ...)
 			list_destroy(&flist);
 			return (-1);
 		}
-		if (flist->content->type == 'c')
+		if (flist->content->specifier == 'c')
 		{
 			write(1, str, flist->content->size);
 			print_len++;
@@ -75,21 +69,4 @@ int	ft_printf(const char *format, ...)
 	list_destroy(&flist);
 	va_end(ap);
 	return (print_len);
-}
-
-char	*ft_strappend(char *dest, char *src)
-{
-	void	*copy;
-
-	if ((copy = (char*)malloc(sizeof(char) * (ft_strlen(dest) + 1))) == NULL)
-		return (NULL);
-	ft_strcpy(copy, dest);
-	free(dest);
-	dest = (char*)malloc(sizeof(char) * (ft_strlen(copy) + ft_strlen(src) + 1));
-	if (dest == NULL)
-		return (NULL);
-	ft_strcpy(dest, copy);
-	free(copy);
-	ft_strcat(dest, src);
-	return (dest);
 }

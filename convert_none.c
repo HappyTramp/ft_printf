@@ -1,23 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   convert_percent.c                                  :+:      :+:    :+:   */
+/*   convert_none.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/10/30 23:23:27 by cacharle          #+#    #+#             */
-/*   Updated: 2019/11/05 23:44:07 by cacharle         ###   ########.fr       */
+/*   Created: 2019/11/04 19:30:25 by cacharle          #+#    #+#             */
+/*   Updated: 2019/11/05 23:44:13 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 
-char	*convert_percent(va_list ap, t_pformat *pformat)
+char	*convert_none(va_list ap, t_pformat *pformat)
 {
-	char *str;
+	char	*str;
 
 	(void)ap;
-	str = ft_strdup("%");
+	if ((str = ft_strdup("")) == NULL)
+		return (NULL);
+	str = handle_precision(pformat, str);
 	str = handle_width(pformat, str);
 	return (str);
 }

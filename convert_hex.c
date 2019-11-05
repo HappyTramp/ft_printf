@@ -6,48 +6,29 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/30 23:23:06 by cacharle          #+#    #+#             */
-/*   Updated: 2019/11/04 19:23:28 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/11/05 23:58:59 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdarg.h>
-#include <stdlib.h>
-#include "libft.h"
 #include "header.h"
 
 char	*convert_hex(va_list ap, t_pformat *pformat)
 {
 	char					*str;
-	char					*tmp;
 	long long unsigned int	n;
 
-	if (pformat->flags & FLAG_SHORT)
-		n = (unsigned short)va_arg(ap, int);
-	else if (pformat->flags & FLAG_SHORT_SHORT)
-		n = (unsigned char)va_arg(ap, int);
-	else if (pformat->flags & FLAG_LONG)
-		n = va_arg(ap, long unsigned int);
-	else if (pformat->flags & FLAG_LONG_LONG)
-		n = va_arg(ap, long long unsigned int);
-	else
-		n = va_arg(ap, unsigned int);
-	str = ITOA_HEX_LOW(n);
-	if (pformat->type == 'X')
-		ft_strtoupper(str);
+	n = length_modifier_unsigned_int(ap, pformat);
+	str = pformat->specifier == 'x' ? ITOA_HEX_LOW(n) : ITOA_HEX_UP(n);
 	str = handle_precision(pformat, str);
-	if (pformat->flags & FLAG_ZERO_PADDING)
+	if (pformat->flags & FLAG_ZERO)
 	{
 		if (pformat->flags & FLAG_ALTERNATE && n != 0)
-			pformat->min_width -= 2;
-		str = handle_padding(pformat, str);
+			pformat->width -= 2;
+		str = handle_width(pformat, str);
 	}
 	if (pformat->flags & FLAG_ALTERNATE && n != 0)
-	{
-		tmp = ft_strjoin(pformat->type == 'X' ? "0X" : "0x", str);
-		free(str);
-		str = tmp;
-	}
-	if (!(pformat->flags & FLAG_ZERO_PADDING))
-		str = handle_padding(pformat, str);
+		str = ft_strjoin_free_snd(pformat->specifier == 'X' ? "0X" : "0x", str);
+	if (!(pformat->flags & FLAG_ZERO))
+		str = handle_width(pformat, str);
 	return (str);
 }

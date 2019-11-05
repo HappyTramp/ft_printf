@@ -6,29 +6,11 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/29 00:12:40 by cacharle          #+#    #+#             */
-/*   Updated: 2019/10/30 23:15:27 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/11/05 23:46:14 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
 #include "header.h"
-
-#define MIN_INT (1 << 31)
-#define MAX_INT (~(1 << 31))
-
-int			strrchr_index(const char *s, char c)
-{
-	int i;
-
-	i = ft_strlen((char*)s) - 1;
-	while (s[i] != c)
-	{
-		if (i == 0)
-			return (-1);
-		i--;
-	}
-	return (i);
-}
 
 static int	nbrlen_radix(long long int nbr, int radix)
 {

@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/28 23:19:24 by cacharle          #+#    #+#             */
-/*   Updated: 2019/11/04 01:31:49 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/11/05 23:40:12 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,71 +20,73 @@ char	*convert(t_pformat *pformat, va_list ap)
 {
 	char			*str;
 
-	if (pformat->flags & FLAG_MIN_WIDTH_WILDCARD)
+	if (pformat->flags & FLAG_WIDTH_WILDCARD)
 	{
-		if (pformat->flags & FLAG_MIN_WIDTH_OVERWRITE)
+		if (pformat->flags & FLAG_WIDTH_OVERWRITE)
 			(void)va_arg(ap, int);
 		else
-			pformat->min_width = va_arg(ap, int);
-		if (pformat->min_width < 0)
+			pformat->width = va_arg(ap, int);
+		if (pformat->width < 0)
 		{
-			pformat->flags |= FLAG_LEFT_ADJUSTED;
-			pformat->min_width *= -1;
+			pformat->flags |= FLAG_MINUS;
+			pformat->width *= -1;
 		}
 	}
 	if (pformat->flags & FLAG_PRECISION_WILDCARD)
 		pformat->precision = va_arg(ap, int);
-	if ((str = convert_type(ap, pformat)) == NULL)
+	if ((str = convert_specifier(ap, pformat)) == NULL)
 		return (NULL);
 	return (str);
 }
 
-char	*convert_type(va_list ap, t_pformat *pformat)
+char	*convert_specifier(va_list ap, t_pformat *pformat)
 {
-	if (pformat->type == 'c')
+	if (pformat->specifier == 'c')
 		return (convert_char(ap, pformat));
-	if (pformat->type == 's')
+	else if (pformat->specifier == 's')
 		return (convert_str(ap, pformat));
-	if (pformat->type == 'p')
+	else if (pformat->specifier == 'p')
 		return (convert_ptr(ap, pformat));
-	if (pformat->type == 'd' || pformat->type == 'i')
+	else if (pformat->specifier == 'd' || pformat->specifier == 'i')
 		return (convert_int(ap, pformat));
-	if (pformat->type == 'u')
+	else if (pformat->specifier == 'u')
 		return (convert_uint(ap, pformat));
-	if (pformat->type == 'x')
+	else if (pformat->specifier == 'x')
 		return (convert_hex(ap, pformat));
-	if (pformat->type == 'X')
+	else if (pformat->specifier == 'X')
 		return (convert_hex(ap, pformat));
-	if (pformat->type == '%')
+	else if (pformat->specifier == '%')
 		return (convert_percent(ap, pformat));
-	if (pformat->type == 'n')
+	else if (pformat->specifier == 'n')
 		return (convert_written(ap, pformat));
+	else
+		return (convert_none(ap, pformat));
 	return (NULL);
 }
 
-char	*handle_padding(t_pformat *pformat, char *str)
+char	*handle_width(t_pformat *pformat, char *str)
 {
 	char	*tmp;
 	int		len;
 	int		i;
 
-	if ((len = ft_strlen(str)) >= pformat->min_width)
+	if ((len = ft_strlen(str)) >= pformat->width)
 		return (str);
-	if ((tmp = (char*)malloc(sizeof(char) * (pformat->min_width + 1))) == NULL)
+	if ((tmp = (char*)malloc(sizeof(char) * (pformat->width + 1))) == NULL)
 		return (NULL);
-	if (pformat->flags & FLAG_LEFT_ADJUSTED)
+	if (pformat->flags & FLAG_MINUS)
 	{
 		i = len;
 		ft_strcpy(tmp, str);
-		while (i < pformat->min_width)
+		while (i < pformat->width)
 			tmp[i++] = ' ';
 		tmp[i] = 0;
 	}
 	else
 	{
 		i = 0;
-		while (i <= pformat->min_width - len)
-			tmp[i++] = pformat->flags & FLAG_ZERO_PADDING ? '0' : ' ';
+		while (i <= pformat->width - len)
+			tmp[i++] = pformat->flags & FLAG_ZERO ? '0' : ' ';
 		ft_strcpy(tmp + i - 1, str);
 	}
 	free(str);
@@ -96,12 +98,12 @@ char	*handle_precision(t_pformat *pformat, char *str)
 	int		len;
 	char	*tmp;
 
-	if (ft_strchr("diuxX", pformat->type) && pformat->precision > 0)
-		pformat->flags &= ~FLAG_ZERO_PADDING;
+	if (ft_strchr("diuxX", pformat->specifier) && pformat->precision > 0)
+		pformat->flags &= ~FLAG_ZERO;
 	len = ft_strlen(str);
 	if (pformat->precision == 0 && str[0] == '0')
 		return (ft_strdup(""));
-	if (!IN_STR("diuxXp", pformat->type) || len >= pformat->precision)
+	if (!ft_strchr("diuxXp", pformat->specifier) || len >= pformat->precision)
 		return (str);
 	if ((tmp = (char*)malloc(sizeof(char) * (pformat->precision + 1))) == NULL)
 		return (NULL);

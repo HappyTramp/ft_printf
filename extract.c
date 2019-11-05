@@ -6,23 +6,22 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/29 00:10:36 by cacharle          #+#    #+#             */
-/*   Updated: 2019/11/04 01:32:44 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/11/05 23:43:33 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
 #include "header.h"
 
-char	*extract_standalone_flags(t_pformat *pformat, char *fmt)
+char	*extract_flags(t_pformat *pformat, char *fmt)
 {
-	if (*fmt == 0)
+	if (*fmt == '\0')
 		return (fmt);
-	while (IS_STANDALONE_FLAG(*fmt))
+	while (ft_strchr(FLAGS_STR, *fmt) != NULL)
 	{
 		if (*fmt == '0')
-			pformat->flags |= FLAG_ZERO_PADDING;
+			pformat->flags |= FLAG_ZERO;
 		if (*fmt == '-')
-			pformat->flags |= FLAG_LEFT_ADJUSTED;
+			pformat->flags |= FLAG_MINUS;
 		if (*fmt == '+')
 			pformat->flags |= FLAG_SIGNED;
 		if (*fmt == ' ')
@@ -38,22 +37,22 @@ char	*extract_standalone_flags(t_pformat *pformat, char *fmt)
 	return (fmt);
 }
 
-char	*extract_min_width(t_pformat *pformat, char *fmt)
+char	*extract_width(t_pformat *pformat, char *fmt)
 {
-	if (*fmt == 0)
+	if (*fmt == '\0')
 		return (fmt);
 	if (*fmt == '*')
 	{
-		pformat->flags |= FLAG_MIN_WIDTH_WILDCARD;
+		pformat->flags |= FLAG_WIDTH_WILDCARD;
 		fmt++;
 	}
 	if (!ft_isdigit(*fmt))
 		return (fmt);
-	pformat->min_width = ft_atoi(fmt);
+	pformat->width = ft_atoi(fmt);
 	while (*fmt && ft_isdigit(*fmt))
 		fmt++;
-	if (pformat->flags & FLAG_MIN_WIDTH_WILDCARD)
-		pformat->flags |= FLAG_MIN_WIDTH_OVERWRITE;
+	if (pformat->flags & FLAG_WIDTH_WILDCARD)
+		pformat->flags |= FLAG_WIDTH_OVERWRITE;
 	return (fmt);
 }
 
