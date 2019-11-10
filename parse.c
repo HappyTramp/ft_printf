@@ -6,13 +6,13 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/29 00:11:33 by cacharle          #+#    #+#             */
-/*   Updated: 2019/11/05 23:46:02 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/11/13 08:13:02 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 
-int			parse(char *format, t_flist **flist)
+int			parse(const char *format, t_flist **flist)
 {
 	t_flist		*tmp;
 	t_pformat	*parsed;
@@ -34,10 +34,10 @@ int			parse(char *format, t_flist **flist)
 	return (1);
 }
 
-t_pformat	*parse_reduced(char *fmt)
+t_pformat	*parse_reduced(const char *fmt)
 {
 	t_pformat	*pformat;
-	char		*start;
+	const char	*start;
 
 	if ((pformat = (t_pformat*)malloc(sizeof(t_pformat))) == NULL)
 		return (NULL);

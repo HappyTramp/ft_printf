@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/29 00:06:46 by cacharle          #+#    #+#             */
-/*   Updated: 2019/11/05 23:58:48 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/11/13 08:57:56 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,9 @@
 # include <stdarg.h>
 # include "libft.h"
 
-# define SPECIFIERS_STR "ncspdiuxX%"
+# define STATUS_ERROR -1
+
+# define SPECIFIERS_STR "nfcspdiuxX%"
 # define FLAGS_STR      "#0- +'"
 
 # define IS_STANDALONE_FLAG(c) (ft_strchr(FLAGS_STR, c) != NULL)
@@ -40,8 +42,10 @@
 # define ITOA_HEX_UP(x)  (ft_itoa_unsigned_base(x, "0123456789ABCDEF"))
 # define ITOA_DEC(x)     (ft_itoa_base(x, "0123456789"))
 
-typedef int		t_bool;
-typedef short	t_flags;
+typedef int						t_bool;
+typedef short					t_flags;
+typedef long long int			t_big_int;
+typedef long long unsigned int	t_big_uint;
 
 typedef struct
 {
@@ -60,18 +64,31 @@ typedef struct		s_flist
 	t_pformat		*content;
 }					t_flist;
 
+typedef struct
+{
+	va_list			ap;
+	t_flist			*flist;
+	const char		*format;
+	char			*out;
+	int				out_size;
+}					t_printf_status;
+
 /*
 ** ft_printf.c
 */
 
 int					ft_printf(const char *format, ...);
+const char			*add_conversion(t_printf_status *status,
+									t_pformat *pformat);
+const char			*add_between(t_printf_status *status);
+int					destroy_status_error(t_printf_status *status);
 
 /*
 ** parse.c
 */
 
-int					parse(char *format, t_flist **flist);
-t_pformat			*parse_reduced(char *fmt);
+int					parse(const char *format, t_flist **flist);
+t_pformat			*parse_reduced(const char *fmt);
 
 /*
 ** printer.c
@@ -89,16 +106,18 @@ char				*handle_precision(t_pformat *pformat, char *str);
 char				*ft_itoa_base(long long int n, char *base);
 char				*ft_itoa_unsigned_base(long long unsigned int n,
 											char *base);
-char				*ft_strtoupper(char *str);
+void				*ft_memjoin_free(void *dst, int dst_size, void *src,
+										int src_size);
 
 /*
 ** extract.c
 */
 
-char				*extract_flags(t_pformat *pformat, char *fmt);
-char				*extract_width(t_pformat *pformat, char *fmt);
-char				*extract_precision(t_pformat *pformat, char *fmt);
-char				*extract_length_modifier(t_pformat *pformat, char *fmt);
+const char			*extract_flags(t_pformat *pformat, const char *fmt);
+const char			*extract_width(t_pformat *pformat, const char *fmt);
+const char			*extract_precision(t_pformat *pformat, const char *fmt);
+const char			*extract_length_modifier(t_pformat *pformat,
+												const char *fmt);
 
 /*
 ** list.c
@@ -122,14 +141,15 @@ char				*convert_uint(va_list ap, t_pformat *pformat);
 char				*convert_hex(va_list ap, t_pformat *pformat);
 char				*convert_percent(va_list ap, t_pformat *pformat);
 char				*convert_written(va_list ap, t_pformat *pformat);
+char				*convert_double(va_list ap, t_pformat *pformat);
 char				*convert_none(va_list ap, t_pformat *pformat);
 
 /*
 ** length_modifier.c
 */
 
-long long unsigned int	length_modifier_unsigned_int(
+t_big_uint			length_modifier_unsigned_int(
 							va_list ap, t_pformat *pformat);
-long long int			length_modifier_int(va_list ap, t_pformat *pformat);
+t_big_int			length_modifier_int(va_list ap, t_pformat *pformat);
 
 #endif

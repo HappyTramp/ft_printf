@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/28 23:19:24 by cacharle          #+#    #+#             */
-/*   Updated: 2019/11/05 23:40:12 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/11/09 01:00:20 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,22 +43,24 @@ char	*convert_specifier(va_list ap, t_pformat *pformat)
 {
 	if (pformat->specifier == 'c')
 		return (convert_char(ap, pformat));
-	else if (pformat->specifier == 's')
+	if (pformat->specifier == 's')
 		return (convert_str(ap, pformat));
-	else if (pformat->specifier == 'p')
+	if (pformat->specifier == 'p')
 		return (convert_ptr(ap, pformat));
-	else if (pformat->specifier == 'd' || pformat->specifier == 'i')
+	if (pformat->specifier == 'd' || pformat->specifier == 'i')
 		return (convert_int(ap, pformat));
-	else if (pformat->specifier == 'u')
+	if (pformat->specifier == 'u')
 		return (convert_uint(ap, pformat));
-	else if (pformat->specifier == 'x')
+	if (pformat->specifier == 'x')
 		return (convert_hex(ap, pformat));
-	else if (pformat->specifier == 'X')
+	if (pformat->specifier == 'X')
 		return (convert_hex(ap, pformat));
-	else if (pformat->specifier == '%')
+	if (pformat->specifier == '%')
 		return (convert_percent(ap, pformat));
-	else if (pformat->specifier == 'n')
+	if (pformat->specifier == 'n')
 		return (convert_written(ap, pformat));
+	if (pformat->specifier == 'f')
+		return (convert_double(ap, pformat));
 	else
 		return (convert_none(ap, pformat));
 	return (NULL);
@@ -98,7 +100,7 @@ char	*handle_precision(t_pformat *pformat, char *str)
 	int		len;
 	char	*tmp;
 
-	if (ft_strchr("diuxX", pformat->specifier) && pformat->precision > 0)
+	if (ft_strchr("diuxX", pformat->specifier) && pformat->precision >= 0)
 		pformat->flags &= ~FLAG_ZERO;
 	len = ft_strlen(str);
 	if (pformat->precision == 0 && str[0] == '0')

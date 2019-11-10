@@ -6,13 +6,13 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/29 00:10:36 by cacharle          #+#    #+#             */
-/*   Updated: 2019/11/05 23:43:33 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/11/10 10:33:33 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 
-char	*extract_flags(t_pformat *pformat, char *fmt)
+const char	*extract_flags(t_pformat *pformat, const char *fmt)
 {
 	if (*fmt == '\0')
 		return (fmt);
@@ -37,7 +37,7 @@ char	*extract_flags(t_pformat *pformat, char *fmt)
 	return (fmt);
 }
 
-char	*extract_width(t_pformat *pformat, char *fmt)
+const char	*extract_width(t_pformat *pformat, const char *fmt)
 {
 	if (*fmt == '\0')
 		return (fmt);
@@ -56,7 +56,7 @@ char	*extract_width(t_pformat *pformat, char *fmt)
 	return (fmt);
 }
 
-char	*extract_precision(t_pformat *pformat, char *fmt)
+const char	*extract_precision(t_pformat *pformat, const char *fmt)
 {
 	if (*fmt == '\0' || *fmt != '.')
 		return (fmt);
@@ -72,7 +72,7 @@ char	*extract_precision(t_pformat *pformat, char *fmt)
 	return (fmt);
 }
 
-char	*extract_length_modifier(t_pformat *pformat, char *fmt)
+const char	*extract_length_modifier(t_pformat *pformat, const char *fmt)
 {
 	if (fmt[0] && fmt[0] == 'l')
 	{

@@ -6,13 +6,13 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/05 23:56:07 by cacharle          #+#    #+#             */
-/*   Updated: 2019/11/05 23:58:24 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/11/09 00:50:06 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 
-long long unsigned int	length_modifier_unsigned_int(va_list ap, t_pformat *pformat)
+t_big_uint	length_modifier_unsigned_int(va_list ap, t_pformat *pformat)
 {
 	if (pformat->flags & FLAG_SHORT)
 		return ((unsigned short)va_arg(ap, int));
@@ -25,7 +25,7 @@ long long unsigned int	length_modifier_unsigned_int(va_list ap, t_pformat *pform
 	return (va_arg(ap, unsigned int));
 }
 
-long long int			length_modifier_int(va_list ap, t_pformat *pformat)
+t_big_int	length_modifier_int(va_list ap, t_pformat *pformat)
 {
 	if (pformat->flags & FLAG_SHORT)
 		return ((short)va_arg(ap, int));

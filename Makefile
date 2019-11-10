@@ -6,14 +6,14 @@
 #    By: cacharle <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/28 17:41:14 by cacharle          #+#    #+#              #
-#    Updated: 2019/11/06 00:00:19 by cacharle         ###   ########.fr        #
+#    Updated: 2019/11/09 01:06:42 by cacharle         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 LIBFT_ROOT = ./libft
 
 CC = gcc
-CCFLAGS = -Wall -Wextra #-Werror
+CCFLAGS = -Wall -Wextra -g #-Werror
 LDFLAGS = -L. -lftprintf
 INCFLAGS = -I$(LIBFT_ROOT)
 
@@ -25,7 +25,7 @@ NAME = libftprintf.a
 SRC = ft_printf.c utils.c printer.c parse.c list.c extract.c \
 	  convert_int.c convert_uint.c convert_char.c convert_str.c \
 	  convert_ptr.c convert_hex.c convert_percent.c convert_written.c \
-	  convert_none.c length_modifier.c
+	  convert_none.c length_modifier.c parse_double.c convert_double.c
 OBJ = $(SRC:.c=.o)
 INCLUDE = header.h
 
