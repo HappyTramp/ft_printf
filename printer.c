@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/28 23:19:24 by cacharle          #+#    #+#             */
-/*   Updated: 2019/11/09 01:00:20 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/11/13 09:28:35 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,6 @@ char	*convert_specifier(va_list ap, t_pformat *pformat)
 		return (convert_percent(ap, pformat));
 	if (pformat->specifier == 'n')
 		return (convert_written(ap, pformat));
-	if (pformat->specifier == 'f')
-		return (convert_double(ap, pformat));
 	else
 		return (convert_none(ap, pformat));
 	return (NULL);

@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/29 00:06:46 by cacharle          #+#    #+#             */
-/*   Updated: 2019/11/13 08:57:56 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/11/13 09:29:23 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ typedef struct		s_flist
 	t_pformat		*content;
 }					t_flist;
 
-typedef struct
+typedef struct		s_printf_status
 {
 	va_list			ap;
 	t_flist			*flist;

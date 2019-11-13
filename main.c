@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/28 04:25:09 by cacharle          #+#    #+#             */
-/*   Updated: 2019/11/13 08:50:26 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/11/13 09:27:58 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,17 +72,13 @@ int main()
 	ft_printf("left adjusted            |%*d|\n", -5, 43);
 	   printf("left adjusted            |%*d|\n", -5, 43);
 
-	ft_printf("overwrite                |%*3d|\n", 5, 43);
-	   printf("overwrite                |%*3d|\n", 5, 43);
-	ft_printf("overwrite neg            |%*-1d|\n", 0, 43);
-	   printf("overwrite neg            |%*-1d|\n", 0, 43);
+	/* ft_printf("overwrite                |%*3d|\n", 5, 43); */
+	   /* printf("overwrite                |%*3d|\n", 5, 43); */
+	/* ft_printf("overwrite neg            |%*-1d|\n", 0, 43); */
+	/*    printf("overwrite neg            |%*-1d|\n", 0, 43); */
 
     ft_printf("pointer field width      |%15p|\n", &test);
        printf("pointer field width      |%15p|\n", &test);
-    ft_printf("pointer precision        |%.15p|\n", &test);
-       printf("pointer precision        |%.15p|\n", &test);
-    ft_printf("pointer precision/width  |%20.15p|\n", &test);
-       printf("pointer precision/width  |%20.15p|\n", &test);
 
 	ft_printf("bonjour%n", &test);
 	printf("%d\n", test);
