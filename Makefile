@@ -6,7 +6,7 @@
 #    By: cacharle <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/28 17:41:14 by cacharle          #+#    #+#              #
-#    Updated: 2019/11/13 09:27:01 by cacharle         ###   ########.fr        #
+#    Updated: 2019/11/14 10:23:31 by cacharle         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,10 +19,10 @@ INCFLAGS = -I$(LIBFT_ROOT)
 
 RM = rm -f
 LIB = ar rcs
-MAKE = make -j4
+MAKE = make
 
 NAME = libftprintf.a
-SRC = ft_printf.c utils.c printer.c parse.c list.c extract.c \
+SRC = ft_printf.c utils.c convert.c parse.c list.c extract.c \
 	  convert_int.c convert_uint.c convert_char.c convert_str.c \
 	  convert_ptr.c convert_hex.c convert_percent.c convert_written.c \
 	  convert_none.c length_modifier.c
@@ -49,6 +49,7 @@ fclean: libft_fclean clean
 
 re: fclean all
 
+test: CCFLAGS += -g
 test: all
 	$(CC) $(CCFLAGS) $(LDFLAGS) -L./libft -lft $(INCFLAGS) -o test main.c
 

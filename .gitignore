@@ -1,7 +1,7 @@
 *.o
-a.out
 *ghc
+a.out
 ft_printf
-*.a
 test
+*.a
 *.dSYM

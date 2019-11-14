@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/28 23:19:24 by cacharle          #+#    #+#             */
-/*   Updated: 2019/11/13 09:28:35 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/11/14 10:22:04 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ char	*convert(t_pformat *pformat, va_list ap)
 {
 	char			*str;
 
+	if (pformat == NULL)
+		return (NULL);
 	if (pformat->flags & FLAG_WIDTH_WILDCARD)
 	{
 		if (pformat->flags & FLAG_WIDTH_OVERWRITE)
@@ -98,11 +100,16 @@ char	*handle_precision(t_pformat *pformat, char *str)
 	int		len;
 	char	*tmp;
 
+	if (pformat == NULL || str == NULL)
+		return (NULL);
 	if (ft_strchr("diuxX", pformat->specifier) && pformat->precision >= 0)
 		pformat->flags &= ~FLAG_ZERO;
 	len = ft_strlen(str);
 	if (pformat->precision == 0 && str[0] == '0')
+	{
+		free(str);
 		return (ft_strdup(""));
+	}
 	if (!ft_strchr("diuxXp", pformat->specifier) || len >= pformat->precision)
 		return (str);
 	if ((tmp = (char*)malloc(sizeof(char) * (pformat->precision + 1))) == NULL)
